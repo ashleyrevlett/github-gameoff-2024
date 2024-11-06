@@ -7,5 +7,4 @@ Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://
 
 # Architecture
 
-Stores do not communicate with each other.
-Game.vue facilitates communication between stores.
+Stores may communicate with each other.

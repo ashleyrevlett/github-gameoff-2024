@@ -14,10 +14,11 @@ export const useGameStore = defineStore('gameStore', {
   actions: {
     startNewGame() {
       // console.log('startNewGame');
-      this.turn = 1;
+      this.turn = 0;
       this.isGameOver = false;
       usePlayerStore().resetState();
       useEventStore().initializeEvents();
+      this.nextTurn();
     },
 
     nextTurn() {
@@ -45,8 +46,9 @@ export const useGameStore = defineStore('gameStore', {
         return;
       }
 
+      useEventStore().refreshEvents();
+
       this.turn++;
-      useEventStore().triggerRandomEvent();
     },
   },
 });

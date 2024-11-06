@@ -6,10 +6,8 @@
         <Stats />
         <EventLog />
       </div>
-      <div v-if="eventStore.activeEvent">
-        <Message :event="eventStore.activeEvent" @choose="handleChoice" />
-      </div>
-      <button v-else @click="nextTurn" class="btn">Next Turn</button>
+      <Messages />
+      <button @click="nextTurn" class="btn">Next Turn</button>
     </div>
     <div v-else>
       <div class="p-4 border border-black mb-4">
@@ -28,28 +26,14 @@ import { ref, onMounted } from 'vue';
 
 import Stats from "../components/Stats.vue";
 import EventLog from "../components/EventLog.vue";
-import Message from "../components/Message.vue";
+import Messages from "../components/Messages.vue";
 
 import { useGameStore } from '../stores/gameStore';
-import { useEventStore } from '../stores/eventStore';
-import { usePlayerStore } from '../stores/playerStore';
-
 const gameStore = useGameStore();
-const eventStore = useEventStore();
-const playerStore = usePlayerStore();
 
 onMounted(() => {
   gameStore.startNewGame();
 });
-
-function handleChoice(choiceId) {
-  console.log('handleChoice', choiceId);
-  const outcome = eventStore.resolveEvent(choiceId);
-  if (outcome) {
-    playerStore.updateStats(outcome);
-  }
-  gameStore.nextTurn();
-}
 
 function nextTurn() {
   gameStore.nextTurn();
