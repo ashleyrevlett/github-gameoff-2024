@@ -7,7 +7,7 @@ import { usePlayerStore } from './playerStore';
 
 export const useEventStore = defineStore('eventStore', {
   state: () => ({
-    activeEvents: [],  // Deferred-choice messages shown to the player
+    activeEvents: [],  // messages and phone calls
     eventPool: [],
     pastEvents: [],
   }),
@@ -41,12 +41,18 @@ export const useEventStore = defineStore('eventStore', {
       Remove the event from the active list.
       Log the event to the pastEvents array.
       */
-      const activeEvent = this.activeEvents.find(e => e.id === eventId);
+     const activeEvent = this.activeEvents.find(e => e.id === eventId);
       if (!activeEvent) return;
 
+      const playerStore = usePlayerStore();
+
       const choice = activeEvent.choices.find(c => c.id === choiceId);
+      if (playerStore.influencePoints < choice.cost.ip || playerStore.money < choice.cost.money) return;
+
       if (choice && choice.outcome) {
-        usePlayerStore().updateStats(choice.outcome);
+        playerStore.updateStats(choice.outcome);
+        playerStore.modifyInfluencePoints(-choice.cost.ip);
+        playerStore.modifyMoney(-choice.cost.money);
         this.logEvent(activeEvent, choice);
         this.activeEvents = this.activeEvents.filter(e => e.id !== eventId);
       }

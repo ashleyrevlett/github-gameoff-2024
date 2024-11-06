@@ -7,7 +7,7 @@
         <EventLog />
       </div>
       <Messages />
-      <button @click="nextTurn" class="btn">Next Turn</button>
+      <button @click="nextTurn" class="btn" :disabled="!canAdvance">Next Turn</button>
     </div>
     <div v-else>
       <div class="p-4 border border-black mb-4">
@@ -22,7 +22,7 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import Stats from "../components/Stats.vue";
 import EventLog from "../components/EventLog.vue";
@@ -30,6 +30,13 @@ import Messages from "../components/Messages.vue";
 
 import { useGameStore } from '../stores/gameStore';
 const gameStore = useGameStore();
+
+import { useEventStore } from '../stores/eventStore';
+const eventStore = useEventStore();
+
+const canAdvance = computed(() => {
+  return eventStore.activeEvents.length === 0;
+});
 
 onMounted(() => {
   gameStore.startNewGame();

@@ -22,9 +22,17 @@ export const useGameStore = defineStore('gameStore', {
     },
 
     nextTurn() {
+      const playerStore = usePlayerStore();
+
+      if (playerStore.reputation >= 100 && playerStore.popularity >= 100 && playerStore.stress <= 100) {
+        this.isGameOver = true;
+        this.gameOverMessage = 'The artists is a superstar! You win!';
+        return;
+      }
+
       if (usePlayerStore().stress >= 100) {
         this.isGameOver = true;
-        this.gameOverMessage = 'The artist quit';
+        this.gameOverMessage = 'The artist burned out and quit';
         return;
       }
 
@@ -47,6 +55,7 @@ export const useGameStore = defineStore('gameStore', {
       }
 
       useEventStore().refreshEvents();
+      usePlayerStore().refreshResources();
 
       this.turn++;
     },

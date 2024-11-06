@@ -8,8 +8,18 @@
         :key="choice.id"
         @click="handleChoice(choice.id)"
         class="btn m-1"
+        :disabled="choice.cost.ip > playerStore.influencePoints || choice.cost.money > playerStore.money"
       >
-        {{ choice.label }}
+        <span>{{ choice.label }}</span>
+        <div
+          v-if="choice.cost.ip > 0 || choice.cost.money > 0"
+          class="text-xs gap-3"
+        >
+          (Cost:
+          <span class="mr-1 inline-block" v-if="choice.cost.ip > 0">{{ choice.cost.ip }} IP</span>
+          <span class="ml-1 inline-block" v-if="choice.cost.money > 0">${{ choice.cost.money.toLocaleString() }}</span>
+          )
+        </div>
       </button>
     </div>
   </div>
@@ -17,7 +27,10 @@
 
 <script setup>
 import { useEventStore } from '../stores/eventStore';
+import { usePlayerStore } from '../stores/playerStore';
+
 const eventStore = useEventStore();
+const playerStore = usePlayerStore();
 
 const props = defineProps({
   event: Object,
@@ -27,5 +40,4 @@ function handleChoice(choiceId) {
   console.log('handleChoice', choiceId);
   eventStore.resolveEvent(props.event.id, choiceId);
 }
-
 </script>

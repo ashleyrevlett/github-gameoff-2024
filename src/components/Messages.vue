@@ -23,5 +23,5 @@ import { useEventStore } from '../stores/eventStore';
 
 const eventStore = useEventStore();
 const activeMessages = computed(() => eventStore.activeEvents.filter(e => e.type === 'message'));
-const activePhoneCalls = computed(() => eventStore.activeEvents.filter(e => e.type === 'phoneCall'));
+const activePhoneCalls = computed(() => eventStore.activeEvents.filter(e => e.type === 'phone_call'));
 </script>
