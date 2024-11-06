@@ -2,7 +2,7 @@
   <main class="p-4">
     <div v-if="!gameStore.isGameOver" class="grid grid-cols-2 gap-4">
       <div>
-        <p class="text-sm font-bold mb-3 p-4 block border-black border">Turn: {{ gameStore.turn }} / {{ gameStore.maxTurns }}</p>
+        <p class="text-sm font-bold mb-3 p-4 block border-black border">Day {{ gameStore.turn }} of {{ gameStore.maxTurns }}</p>
         <Stats />
         <EventLog />
       </div>

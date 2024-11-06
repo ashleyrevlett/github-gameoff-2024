@@ -6,7 +6,7 @@ import { useEventStore } from './eventStore';
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
     turn: 1,
-    maxTurns: 20,
+    maxTurns: 30,
     isGameOver: false,
     gameOverMessage: null,
   }),
