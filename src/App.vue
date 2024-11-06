@@ -1,7 +1,7 @@
 <template>
-  <DeskLayout />
+  <Game />
 </template>
 
 <script setup>
-import DeskLayout from './layouts/DeskLayout.vue';
+import Game from './views/Game.vue';
 </script>

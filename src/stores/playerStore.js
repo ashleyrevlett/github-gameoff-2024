@@ -5,7 +5,7 @@ export const usePlayerStore = defineStore('playerStore', {
   state: () => ({
     reputation: 10,
     popularity: 10,
-    stress: 10,
+    stress: 0,
   }),
 
   actions: {
@@ -30,9 +30,9 @@ export const usePlayerStore = defineStore('playerStore', {
       this.stress = Math.max(0, Math.min(100, this.stress + amount));
     },
     resetState() {
-      this.reputation = 50;
-      this.popularity = 50;
-      this.stress = 10;
+      this.reputation = 10;
+      this.popularity = 10;
+      this.stress = 0;
     },
   },
 });

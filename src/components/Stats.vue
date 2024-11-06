@@ -1,5 +1,5 @@
 <template>
-  <div class="status-panel">
+  <div class="p-4 border border-black mb-4">
     <ProgressBar :percentage="playerStore.reputation" label="Reputation" />
     <ProgressBar :percentage="playerStore.popularity" label="Buzz" />
     <ProgressBar :percentage="playerStore.stress" label="Stress" />

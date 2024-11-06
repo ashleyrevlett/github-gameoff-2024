@@ -1,15 +1,15 @@
 <template>
-  <div class="meter-container">
-    <div v-if="label" class="meter-label">
+  <div class="flex items-center gap-4">
+    <div v-if="label" class="text-sm text-left w-[60px]">
       {{ label }}
     </div>
-    <div class="meter-bar">
+    <div class="flex-grow h-3 bg-white border border-black rounded-full overflow-hidden">
       <div
-        class="meter-fill animate-fill"
+        class="h-full bg-green-500 rounded-full transition-width duration-300 ease-in-out"
         :style="{ width: `${percentage}%` }"
       ></div>
     </div>
-
+    <div>{{ percentage }}%</div>
   </div>
 </template>
 
@@ -28,36 +28,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.meter-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.meter-bar {
-  flex-grow: 1;
-  height: 0.75rem;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.meter-fill {
-  height: 100%;
-  background-color: green;
-  border-radius: 9999px;
-}
-
-.animate-fill {
-  transition: width 0.3s ease-in-out;
-}
-
-.meter-label {
-  font-size: 0.875rem;
-  text-align: left;
-  width: 60px;
-}
-</style>

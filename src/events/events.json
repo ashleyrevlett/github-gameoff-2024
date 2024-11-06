@@ -1,0 +1,141 @@
+[
+  {
+    "id": "tabloid_scandal",
+    "type": "phone_call",
+    "title": "Tabloid Scandal",
+    "description": "A tabloid has a story on your star's wild party. They're giving you a chance to respond before it goes live.",
+    "choices": [
+      {
+        "id": "deny",
+        "label": "Deny the Story",
+        "outcome": {
+          "popularity": 5,
+          "reputation": -10,
+          "stress": 5
+        }
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it",
+        "outcome": {
+          "popularity": 10,
+          "reputation": -5,
+          "stress": 10
+        }
+      },
+      {
+        "id": "spin",
+        "label": "Spin it as 'blowing off steam'",
+        "outcome": {
+          "popularity": 15,
+          "reputation": 5,
+          "stress": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "charity_event",
+    "type": "message",
+    "title": "Charity Event Invitation",
+    "description": "Your star is invited to a high-profile charity event. Should they attend?",
+    "expiresIn": 2,
+    "choices": [
+      {
+        "id": "attend",
+        "label": "Attend the event",
+        "outcome": {
+          "popularity": 8,
+          "reputation": 10,
+          "stress": 3
+        }
+      },
+      {
+        "id": "decline",
+        "label": "Politely decline",
+        "outcome": {
+          "reputation": 2,
+          "stress": -2
+        }
+      }
+    ]
+  },
+  {
+    "id": "late_night_tv",
+    "type": "phone_call",
+    "title": "Late Night TV Appearance",
+    "description": "A popular late-night show offers your star a last-minute appearance slot. Do you accept?",
+    "choices": [
+      {
+        "id": "accept",
+        "label": "Accept the appearance",
+        "outcome": {
+          "popularity": 12,
+          "reputation": 6,
+          "stress": 7
+        }
+      },
+      {
+        "id": "decline",
+        "label": "Decline the offer",
+        "outcome": {
+          "reputation": -2,
+          "stress": -3
+        }
+      }
+    ]
+  },
+  {
+    "id": "backstage_drama",
+    "type": "message",
+    "title": "Backstage Drama",
+    "description": "Rumors are spreading about arguments between your star and their bandmates. Address it?",
+    "expiresIn": 3,
+    "choices": [
+      {
+        "id": "deny_rumors",
+        "label": "Deny the rumors",
+        "outcome": {
+          "popularity": -5,
+          "reputation": 3,
+          "stress": 5
+        }
+      },
+      {
+        "id": "fuel_rumors",
+        "label": "Fuel the rumors for attention",
+        "outcome": {
+          "popularity": 15,
+          "reputation": -10,
+          "stress": 10
+        }
+      }
+    ]
+  },
+  {
+    "id": "fashion_show",
+    "type": "message",
+    "title": "Fashion Show Invitation",
+    "description": "Your star is invited to a major fashion show. It could be a great publicity opportunity.",
+    "expiresIn": 1,
+    "choices": [
+      {
+        "id": "attend",
+        "label": "Attend the fashion show",
+        "outcome": {
+          "popularity": 10,
+          "reputation": 5,
+          "stress": 3
+        }
+      },
+      {
+        "id": "skip",
+        "label": "Skip the event",
+        "outcome": {
+          "reputation": -2,
+          "stress": -1
+        }
+      }
+    ]
+  }
+]

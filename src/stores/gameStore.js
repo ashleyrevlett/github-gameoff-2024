@@ -13,6 +13,7 @@ export const useGameStore = defineStore('gameStore', {
 
   actions: {
     startNewGame() {
+      // console.log('startNewGame');
       this.turn = 1;
       this.isGameOver = false;
       usePlayerStore().resetState();
@@ -20,7 +21,6 @@ export const useGameStore = defineStore('gameStore', {
     },
 
     nextTurn() {
-
       if (usePlayerStore().stress >= 100) {
         this.isGameOver = true;
         this.gameOverMessage = 'The artist quit';
