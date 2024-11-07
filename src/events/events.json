@@ -9,11 +9,19 @@
       {
         "id": "accept_gig",
         "label": "Accept the Local Gig",
-        "outcome": {
+        "positive_outcome": {
           "money": 1000,
           "popularity": 5,
           "reputation": 2,
-          "stress": 3
+          "stress": 3,
+          "message": "The show was a hit! Fans loved the intimate setting, and the money helps too."
+        },
+        "negative_outcome": {
+          "money": 500,
+          "popularity": -3,
+          "reputation": -2,
+          "stress": 5,
+          "message": "The gig went poorly with technical issues, and fans seemed unimpressed."
         },
         "cost": {
           "ip": 5,
@@ -23,9 +31,16 @@
       {
         "id": "decline_gig",
         "label": "Decline the Offer",
-        "outcome": {
+        "positive_outcome": {
           "reputation": -1,
-          "stress": -2
+          "stress": -2,
+          "message": "Declining the gig kept your star well-rested, with minimal impact on reputation."
+        },
+        "negative_outcome": {
+          "reputation": -5,
+          "popularity": -2,
+          "stress": -1,
+          "message": "Fans were disappointed by the decline, seeing it as a missed opportunity."
         },
         "cost": {
           "ip": 0,
@@ -44,11 +59,19 @@
       {
         "id": "book_festival",
         "label": "Book the Festival Performance",
-        "outcome": {
+        "positive_outcome": {
           "money": 5000,
           "popularity": 15,
           "reputation": 5,
-          "stress": 10
+          "stress": 10,
+          "message": "The festival performance was a success! New fans and big earnings came rolling in."
+        },
+        "negative_outcome": {
+          "money": 2500,
+          "popularity": 5,
+          "reputation": -5,
+          "stress": 15,
+          "message": "Bad weather and sound issues made the festival a stressful experience with mixed reviews."
         },
         "cost": {
           "ip": 15,
@@ -58,9 +81,16 @@
       {
         "id": "pass_on_festival",
         "label": "Pass on the Festival",
-        "outcome": {
+        "positive_outcome": {
           "reputation": -5,
-          "stress": -3
+          "stress": -3,
+          "message": "Skipping the festival helped avoid a potentially risky situation. No major fallout."
+        },
+        "negative_outcome": {
+          "reputation": -10,
+          "popularity": -5,
+          "stress": -1,
+          "message": "The festival was a big hit without your star, leaving fans disappointed and reputation hurt."
         },
         "cost": {
           "ip": 0,
@@ -78,11 +108,19 @@
       {
         "id": "book_tv_show",
         "label": "Book the TV Special",
-        "outcome": {
+        "positive_outcome": {
           "money": 7000,
           "popularity": 20,
           "reputation": 10,
-          "stress": 15
+          "stress": 15,
+          "message": "The TV performance was flawless! Ratings soared and fans were thrilled."
+        },
+        "negative_outcome": {
+          "money": 3000,
+          "popularity": 10,
+          "reputation": -5,
+          "stress": 20,
+          "message": "Technical issues plagued the performance, making it a challenging night with mixed reviews."
         },
         "cost": {
           "ip": 25,
@@ -92,9 +130,16 @@
       {
         "id": "decline_tv_show",
         "label": "Decline the TV Special",
-        "outcome": {
+        "positive_outcome": {
           "reputation": -5,
-          "stress": -5
+          "stress": -5,
+          "message": "Declining the appearance preserved your star's energy and reputation took only a minor hit."
+        },
+        "negative_outcome": {
+          "reputation": -10,
+          "popularity": -10,
+          "stress": -3,
+          "message": "Declining the appearance disappointed fans and hurt reputation."
         },
         "cost": {
           "ip": 0,
@@ -103,7 +148,6 @@
       }
     ]
   },
-
   {
     "id": "tabloid_scandal",
     "type": "phone_call",
@@ -113,10 +157,17 @@
       {
         "id": "deny",
         "label": "Deny the Story",
-        "outcome": {
+        "positive_outcome": {
           "popularity": 5,
+          "reputation": -5,
+          "stress": 5,
+          "message": "The denial was successful, and the story died down quickly."
+        },
+        "negative_outcome": {
+          "popularity": -5,
           "reputation": -10,
-          "stress": 5
+          "stress": 10,
+          "message": "The denial backfired, as more 'sources' confirmed the story, damaging reputation further."
         },
         "cost": {
           "ip": 10,
@@ -126,10 +177,17 @@
       {
         "id": "ignore",
         "label": "Ignore it",
-        "outcome": {
+        "positive_outcome": {
           "popularity": 10,
-          "reputation": -5,
-          "stress": 10
+          "reputation": -3,
+          "stress": 8,
+          "message": "Ignoring it worked out, and the story lost traction quickly."
+        },
+        "negative_outcome": {
+          "popularity": -2,
+          "reputation": -10,
+          "stress": 10,
+          "message": "Ignoring the story led to rumors spiraling, hurting reputation and adding stress."
         },
         "cost": {
           "ip": 0,
@@ -139,10 +197,17 @@
       {
         "id": "spin",
         "label": "Spin it as 'blowing off steam'",
-        "outcome": {
+        "positive_outcome": {
           "popularity": 15,
           "reputation": 5,
-          "stress": 8
+          "stress": 8,
+          "message": "The spin worked! Fans saw it as harmless fun, and reputation even got a small boost."
+        },
+        "negative_outcome": {
+          "popularity": 5,
+          "reputation": -10,
+          "stress": 12,
+          "message": "The spin fell flat, and some media outlets criticized the attempt, hurting reputation."
         },
         "cost": {
           "ip": 15,
@@ -161,10 +226,17 @@
       {
         "id": "attend",
         "label": "Attend the event",
-        "outcome": {
+        "positive_outcome": {
           "popularity": 8,
           "reputation": 10,
-          "stress": 3
+          "stress": 3,
+          "message": "The charity event was a success! Fans admired your star’s generosity."
+        },
+        "negative_outcome": {
+          "popularity": 5,
+          "reputation": -5,
+          "stress": 5,
+          "message": "The event didn’t go as planned, with few fans noticing and media unimpressed."
         },
         "cost": {
           "ip": 5,
@@ -174,111 +246,16 @@
       {
         "id": "decline",
         "label": "Politely decline",
-        "outcome": {
-          "reputation": 2,
-          "stress": -2
+        "positive_outcome": {
+          "reputation": -1,
+          "stress": -2,
+          "message": "Declining had little effect, and your star avoided extra stress."
         },
-        "cost": {
-          "ip": 0,
-          "money": 0
-        }
-      }
-    ]
-  },
-  {
-    "id": "late_night_tv",
-    "type": "phone_call",
-    "title": "Late Night TV Appearance",
-    "description": "A popular late-night show offers your star a last-minute appearance slot. Do you accept?",
-    "choices": [
-      {
-        "id": "accept",
-        "label": "Accept the appearance",
-        "outcome": {
-          "popularity": 12,
-          "reputation": 6,
-          "stress": 7
-        },
-        "cost": {
-          "ip": 20,
-          "money": 0
-        }
-      },
-      {
-        "id": "decline",
-        "label": "Decline the offer",
-        "outcome": {
-          "reputation": -2,
-          "stress": -3
-        },
-        "cost": {
-          "ip": 0,
-          "money": 0
-        }
-      }
-    ]
-  },
-  {
-    "id": "backstage_drama",
-    "type": "message",
-    "title": "Backstage Drama",
-    "description": "Rumors are spreading about arguments between your star and their bandmates. Address it?",
-    "expiresIn": 3,
-    "choices": [
-      {
-        "id": "deny_rumors",
-        "label": "Deny the rumors",
-        "outcome": {
-          "popularity": -5,
-          "reputation": 3,
-          "stress": 5
-        },
-        "cost": {
-          "ip": 10,
-          "money": 0
-        }
-      },
-      {
-        "id": "fuel_rumors",
-        "label": "Fuel the rumors for attention",
-        "outcome": {
-          "popularity": 15,
-          "reputation": -10,
-          "stress": 10
-        },
-        "cost": {
-          "ip": 5,
-          "money": 0
-        }
-      }
-    ]
-  },
-  {
-    "id": "fashion_show",
-    "type": "message",
-    "title": "Fashion Show Invitation",
-    "description": "Your star is invited to a major fashion show. It could be a great publicity opportunity.",
-    "expiresIn": 1,
-    "choices": [
-      {
-        "id": "attend",
-        "label": "Attend the fashion show",
-        "outcome": {
-          "popularity": 10,
-          "reputation": 5,
-          "stress": 3
-        },
-        "cost": {
-          "ip": 10,
-          "money": 500
-        }
-      },
-      {
-        "id": "skip",
-        "label": "Skip the event",
-        "outcome": {
-          "reputation": -2,
-          "stress": -1
+        "negative_outcome": {
+          "reputation": -5,
+          "popularity": -2,
+          "stress": -1,
+          "message": "The decline disappointed fans who expected charity involvement."
         },
         "cost": {
           "ip": 0,

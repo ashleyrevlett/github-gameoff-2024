@@ -21,6 +21,7 @@ export const useEventStore = defineStore('eventStore', {
     initializeEvents() {
       this.eventPool = events; // Load events from events.json into eventPool
       this.refreshEvents(); // populate activeEvents
+      this.pastEvents = [];
     },
 
     refreshEvents() {
@@ -69,19 +70,22 @@ export const useEventStore = defineStore('eventStore', {
       const choice = activeEvent.choices.find(c => c.id === choiceId);
       if (playerStore.influencePoints < choice.cost.ip || playerStore.money < choice.cost.money) return;
 
-      if (choice && choice.outcome) {
-        playerStore.updateStats(choice.outcome);
+      // randomly select between positive and negative outcome; 80% likelihood of positive outcome
+      const outcome = Math.random() < 0.8 ? choice.positive_outcome : choice.negative_outcome;
+
+      if (choice && outcome) {
+        playerStore.updateStats(outcome);
         playerStore.modifyInfluencePoints(-choice.cost.ip);
         playerStore.modifyMoney(-choice.cost.money);
-        this.logEvent(activeEvent, choice);
+        this.logEvent(activeEvent, choice, outcome);
         this.activeEvents = this.activeEvents.filter(e => e.id !== eventId);
       }
     },
 
-    logEvent(event, choice) {
-      const outcome = choice.outcome;
-      const outcomeString = Object.entries(outcome).map(([key, value]) => `${key}: ${value}`).join(', ');
-      const eventLog = `${event.title} - You chose to ${choice.label}. Effect: ${outcomeString}`;
+    logEvent(event, choice, outcome) {
+      const statsChanged = Object.fromEntries(Object.entries(outcome).filter(([key, value]) => key !== 'message'));
+      const outcomeString = Object.entries(statsChanged).map(([key, value]) => `${key}: ${value}`).join(', ');
+      const eventLog = `${event.title} -- You chose: ${choice.label}. Outcome: ${outcome.message} Effect: ${outcomeString}`;
       this.pastEvents.unshift(eventLog);
     }
   },
