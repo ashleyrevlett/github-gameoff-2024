@@ -12,6 +12,11 @@ export const useEventStore = defineStore('eventStore', {
     pastEvents: [],
   }),
 
+  getters: {
+    activeMessages: (state) => state.activeEvents.filter(e => e.type === 'message'),
+    activePhoneCalls: (state) => state.activeEvents.filter(e => e.type === 'phone_call'),
+  },
+
   actions: {
     initializeEvents() {
       this.eventPool = events; // Load events from events.json into eventPool
@@ -19,20 +24,35 @@ export const useEventStore = defineStore('eventStore', {
     },
 
     refreshEvents() {
-      this.activeEvents = [];
-      const numEvents = Math.floor(Math.random() * 4) + 2; // Random number between 2 and 5
-      for (let i = 0; i < numEvents; i++) {
-        this.triggerRandomEvent();
-      }
-    },
+      console.log('refreshEvents');
 
-    triggerRandomEvent() {
-      // Randomly trigger an event
-      const i = Math.floor(Math.random() * this.eventPool.length);
-      const event = this.eventPool[i];
-      // Generate a unique ID for this event instance
-      const uid = crypto.randomUUID();
-      this.activeEvents.push({ ...event, id: uid });
+      // remove expired events, decrementing expiresIn
+      for (const event of this.activeEvents) {
+        event.expiresIn--;
+      }
+      this.activeEvents = this.activeEvents.filter(e => e.expiresIn > 0);
+
+
+      // add new events
+      const messageEvents = this.eventPool.filter(e => e.type === 'message');
+      const phoneEvents = this.eventPool.filter(e => e.type === 'phone_call');
+
+      // Randomly trigger 1-4 messages
+      const numEvents = Math.floor(Math.random() * 3) + 1;
+      for (let i = 0; i < numEvents; i++) {
+        const randomMessageIndex = Math.floor(Math.random() * messageEvents.length);
+        const randomMessage = messageEvents[randomMessageIndex];
+        const uid = crypto.randomUUID();
+        this.activeEvents.push({ ...randomMessage, id: uid });
+      }
+
+      // 50% of the time, trigger 1 phone call
+      if (Math.random() < 0.5) {
+        const randomPhoneCallIndex = Math.floor(Math.random() * phoneEvents.length);
+        const randomPhoneCall = phoneEvents[randomPhoneCallIndex];
+        const uid = crypto.randomUUID();
+        this.activeEvents.push({ ...randomPhoneCall, id: uid });
+      }
     },
 
     resolveEvent(eventId, choiceId) {

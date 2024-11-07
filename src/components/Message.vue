@@ -11,6 +11,8 @@
         :disabled="choice.cost.ip > playerStore.influencePoints || choice.cost.money > playerStore.money"
       >
         <span>{{ choice.label }}</span>
+        <p v-if="event.expiresIn >= 0" class="mt-2 italic">Response due in {{ event.expiresIn }} days</p>
+        <p v-else class="mt-2 italic">No response required</p>
         <div
           v-if="choice.cost.ip > 0 || choice.cost.money > 0"
           class="text-xs gap-3"

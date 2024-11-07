@@ -7,6 +7,7 @@ export const useGameStore = defineStore('gameStore', {
   state: () => ({
     turn: 1,
     maxTurns: 30,
+    currentDay: new Date('1982-03-01'),
     isGameOver: false,
     gameOverMessage: null,
   }),
@@ -18,6 +19,7 @@ export const useGameStore = defineStore('gameStore', {
       this.isGameOver = false;
       usePlayerStore().resetState();
       useEventStore().initializeEvents();
+      this.currentDay = new Date('1982-03-01');
       this.nextTurn();
     },
 
@@ -58,6 +60,9 @@ export const useGameStore = defineStore('gameStore', {
       usePlayerStore().refreshResources();
 
       this.turn++;
+
+      // advance the day
+      this.currentDay.setDate(this.currentDay.getDate() + 1);
     },
   },
 });

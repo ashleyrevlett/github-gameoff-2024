@@ -2,26 +2,33 @@
   <div class="border border-black p-4">
     <div>
       <p class="font-bold">Messages</p>
-      <div v-if="activeMessages.length > 0">
+      <TransitionGroup name="fade" tag="div" v-if="activeMessages.length > 0">
         <Message v-for="message in activeMessages" :key="message.id" :event="message" />
-      </div>
-    </div>
-    <div>
-      <p class="mt-4 font-bold">Phone Calls</p>
-      <div v-if="activePhoneCalls.length > 0">
-        <Message v-for="message in activePhoneCalls" :key="message.id" :event="message" />
-      </div>
+      </TransitionGroup>
+      <p v-else>No messages</p>
     </div>
   </div>
 </template>
 
 
 <script setup>
-import { computed } from 'vue';
-import Message from "../components/Message.vue";
+import { storeToRefs } from 'pinia';
 import { useEventStore } from '../stores/eventStore';
+import Message from "../components/Message.vue";
 
 const eventStore = useEventStore();
-const activeMessages = computed(() => eventStore.activeEvents.filter(e => e.type === 'message'));
-const activePhoneCalls = computed(() => eventStore.activeEvents.filter(e => e.type === 'phone_call'));
+const { activeMessages } = storeToRefs(eventStore);
 </script>
+
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
