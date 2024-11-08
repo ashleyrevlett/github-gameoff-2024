@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { usePlayerStore } from './playerStore';
 import { useEventStore } from './eventStore';
+import { useCharacterStore } from './characterStore';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -20,33 +21,27 @@ export const useGameStore = defineStore('gameStore', {
       usePlayerStore().resetState();
       useEventStore().initializeEvents();
       this.currentDay = new Date('1982-03-01');
-      this.nextTurn();
+      // this.nextTurn();
     },
 
 
     checkWinLose() {
       const playerStore = usePlayerStore();
-      if (playerStore.reputation >= 100 && playerStore.popularity >= 100 && playerStore.stress <= 100) {
+      if (playerStore.fame >= 100 && playerStore.stress <= 100) {
         this.isGameOver = true;
-        this.gameOverMessage = 'The artists is a superstar! You win!';
+        this.gameOverMessage = 'The artist is a superstar! You win!';
         return;
       }
 
       if (playerStore.stress >= 100) {
         this.isGameOver = true;
-        this.gameOverMessage = 'The artist burned out and quit';
+        this.gameOverMessage = 'The artist burned out and quit.';
         return;
       }
 
-      if (playerStore.popularity <= 0 && playerStore.reputation <= 0) {
+      if (this.turn >= this.maxTurns && playerStore.fame < 100) {
         this.isGameOver = true;
-        this.gameOverMessage = 'The artist lost all popularity and reputation';
-        return;
-      }
-
-      if (this.turn >= this.maxTurns) {
-        this.isGameOver = true;
-        this.gameOverMessage = 'Time\'s up!';
+        this.gameOverMessage = 'Time\'s up! You failed to reach superstar status.';
         return;
       }
 
@@ -61,6 +56,7 @@ export const useGameStore = defineStore('gameStore', {
       // reset resources and events
       useEventStore().refreshEvents();
       usePlayerStore().refreshResources();
+      useCharacterStore().refreshContacts();
 
       // advance the day
       this.turn++;

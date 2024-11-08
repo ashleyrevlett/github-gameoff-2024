@@ -1,7 +1,10 @@
 <template>
   <div class="border border-black p-3">
     <h2 class="text-lg font-bold">{{ event.title }}</h2>
+    <h3 class="font-bold">From: {{ event.sender.name }}, {{ event.sender.organization }}</h3>
     <p class="mb-3">{{ event.description }}</p>
+    <p v-if="event.expiresIn >= 0" class="mt-2 font-bold text-red-500 text-sm mb-3">Response due within {{ event.expiresIn }} days</p>
+    <p v-if="event.expiresIn === 0 && event.type === 'message'" class="mt-2 font-bold text-red-500 text-sm mb-3">Response due today!</p>
     <div class="choices flex flex-row gap-1">
       <button
         v-for="choice in event.choices"
@@ -11,7 +14,6 @@
         :disabled="choice.cost.ip > playerStore.influencePoints || choice.cost.money > playerStore.money"
       >
         <span>{{ choice.label }}</span>
-        <p v-if="event.expiresIn >= 0" class="mt-2 italic">Response due in {{ event.expiresIn }} days</p>
         <div
           v-if="choice.cost.ip > 0 || choice.cost.money > 0"
           class="text-xs gap-3"

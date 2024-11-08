@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import events from '../data/events.json'
 import { usePlayerStore } from './playerStore';
 import { useGameStore } from './gameStore';
+import { useCharacterStore } from './characterStore';
+
 export const useEventStore = defineStore('eventStore', {
   state: () => ({
     activeEvents: [],  // messages and phone calls
@@ -32,26 +34,29 @@ export const useEventStore = defineStore('eventStore', {
       }
       this.activeEvents = this.activeEvents.filter(e => e.expiresIn > 0);
 
-
-      // add new events
-      const messageEvents = this.eventPool.filter(e => e.type === 'message');
-      const phoneEvents = this.eventPool.filter(e => e.type === 'phone_call');
-
       // Randomly trigger 1-3 messages
-      const numEvents = Math.ceil(Math.random() * 3);
+      const numEvents = Math.floor(Math.random() * 2) + 1;
       for (let i = 0; i < numEvents; i++) {
-        const randomMessageIndex = Math.floor(Math.random() * messageEvents.length);
-        const randomMessage = messageEvents[randomMessageIndex];
-        const uid = crypto.randomUUID();
-        this.activeEvents.push({ ...randomMessage, id: uid });
+        this.triggerRandomEvent('message');
       }
 
-      // 50% of the time, trigger 1 phone call
-      if (Math.random() < 0.5) {
-        const randomPhoneCallIndex = Math.floor(Math.random() * phoneEvents.length);
-        const randomPhoneCall = phoneEvents[randomPhoneCallIndex];
-        const uid = crypto.randomUUID();
-        this.activeEvents.push({ ...randomPhoneCall, id: uid });
+      // 60% of the time, trigger 1 phone call if not first turn
+      if (Math.random() < 0.6 && useGameStore().turn > 1) {
+        this.triggerRandomEvent('phone_call');
+      }
+    },
+
+    triggerRandomEvent(eventType='message') {
+      const possibleEvents = this.eventPool.filter(e => e.type === eventType);
+      const randomEventIndex = Math.floor(Math.random() * possibleEvents.length);
+      const randomEvent = possibleEvents[randomEventIndex];
+      const uid = crypto.randomUUID();
+      const potentialSenders = useCharacterStore().contacts.filter(c => c.category === randomEvent.category);
+      if (potentialSenders.length > 0) {
+        const randomSender = potentialSenders[Math.floor(Math.random() * potentialSenders.length)];
+        this.activeEvents.unshift({ ...randomEvent, id: uid, sender: randomSender });
+      } else {
+        console.log('no potential senders for', randomEvent.category);
       }
     },
 
@@ -69,7 +74,7 @@ export const useEventStore = defineStore('eventStore', {
       const choice = activeEvent.choices.find(c => c.id === choiceId);
       if (playerStore.influencePoints < choice.cost.ip || playerStore.money < choice.cost.money) return;
 
-      // randomly select between positive and negative outcome; 80% likelihood of positive outcome
+      // randomly select between positive and negative outcome; 90% likelihood of positive outcome
       const outcome = Math.random() < 0.8 ? choice.positive_outcome : choice.negative_outcome;
 
       if (choice && outcome) {

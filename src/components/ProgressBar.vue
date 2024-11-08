@@ -1,11 +1,12 @@
 <template>
   <div class="flex items-center gap-4">
-    <div v-if="label" class="text-sm text-left w-[60px]">
+    <div v-if="label" class="text-lg w-[60px]">
       {{ label }}
     </div>
     <div class="flex-grow h-3 bg-white border border-black rounded-full overflow-hidden">
       <div
-        class="h-full bg-green-500 rounded-full transition-width duration-300 ease-in-out"
+        class="h-full rounded-full transition-width duration-300 ease-in-out"
+        :class="`bg-${color}-500`"
         :style="{ width: `${percentage}%` }"
       ></div>
     </div>
@@ -24,6 +25,10 @@ export default {
     label: {
       type: String,
       default: ''
+    },
+    color: {
+      type: String,
+      default: 'green'
     }
   }
 }

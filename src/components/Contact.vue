@@ -3,7 +3,8 @@
     <div>
       <p class="text-sm font-bold">{{ contact.name }}</p>
       <p class="text-xs">{{ contact.category }}</p>
-      <p class="text-xs">{{ contact.city }}</p>
+      <p class="text-xs">{{ contact.organization }}</p>
+      <p class="text-xs">{{ contact.location }}</p>
     </div>
     <button class="bg-blue-500 text-white px-2 py-1 rounded-md text-sm">Send Message</button>
   </div>

@@ -2,15 +2,15 @@
   <main v-if="!gameStore.isGameOver" class="p-4">
     <Notification v-if="eventStore.notificationMessage" :message="eventStore.notificationMessage" @close="eventStore.closeNotification" />
     <PhoneCalls v-if="eventStore.activePhoneCalls.length > 0" />
+    <header class="flex justify-between items-center px-4 py-2 border-black border mb-4">
+        <div>
+          <p class="text-md font-bold">{{ gameStore.currentDay.toLocaleString("en-US", { month: 'long', day: 'numeric', year: 'numeric' }) }}</p>
+          <p class="text-xs">Turn {{ gameStore.turn }} of {{ gameStore.maxTurns }}</p>
+        </div>
+        <button @click="nextTurn" class="btn btn-green" :disabled="!canAdvance">Skip to Next Day</button>
+    </header>
     <div class="flex gap-4">
       <div class="w-1/3">
-        <header class="flex justify-between items-center p-4 border-black border">
-          <div>
-            <p class="text-md font-bold mb-1">{{ gameStore.currentDay.toLocaleString("en-US", { month: 'long', day: 'numeric', year: 'numeric' }) }}</p>
-            <p class="text-xs mb-3">Turn {{ gameStore.turn }} of {{ gameStore.maxTurns }}</p>
-          </div>
-          <button @click="nextTurn" class="btn btn-green" :disabled="!canAdvance">Skip to Next Day</button>
-        </header>
         <Stats />
         <Contacts />
         <EventLog />

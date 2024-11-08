@@ -3,20 +3,16 @@ import { defineStore } from 'pinia';
 
 export const usePlayerStore = defineStore('playerStore', {
   state: () => ({
-    reputation: 10,
-    popularity: 10,
+    fame: 0,
     stress: 0,
-    influencePoints: 9,
+    influencePoints: 10,
     money: 1000,
   }),
 
   actions: {
     updateStats(outcome) {
-      if (outcome.reputation) {
-        this.modifyReputation(outcome.reputation);
-      }
-      if (outcome.popularity) {
-        this.modifyPopularity(outcome.popularity);
+      if (outcome.fame) {
+        this.modifyFame(outcome.fame);
       }
       if (outcome.stress) {
         this.modifyStress(outcome.stress);
@@ -26,25 +22,21 @@ export const usePlayerStore = defineStore('playerStore', {
       }
     },
     modifyInfluencePoints(amount) {
-      this.influencePoints = Math.max(0, Math.min(100, this.influencePoints + amount));
+      this.influencePoints = Math.max(0, this.influencePoints + amount);
     },
     modifyMoney(amount) {
-      this.money = Math.max(0, Math.min(1000, this.money + amount));
+      this.money = Math.max(0, this.money + amount);
     },
-    modifyReputation(amount) {
-      this.reputation = Math.max(0, Math.min(100, this.reputation + amount));
-    },
-    modifyPopularity(amount) {
-      this.popularity = Math.max(0, Math.min(100, this.popularity + amount));
+    modifyFame(amount) {
+      this.fame = Math.max(0, Math.min(100, this.fame + amount));
     },
     modifyStress(amount) {
       this.stress = Math.max(0, Math.min(100, this.stress + amount));
     },
     resetState() {
-      this.reputation = 10;
-      this.popularity = 10;
+      this.fame = 0;
       this.stress = 0;
-      this.influencePoints = 9;
+      this.influencePoints = 10;
       this.money = 1000;
     },
     refreshResources() {
