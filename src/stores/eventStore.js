@@ -3,13 +3,13 @@ import events from '../data/events.json'
 import { usePlayerStore } from './playerStore';
 import { useGameStore } from './gameStore';
 import { useCharacterStore } from './characterStore';
+import { useNotificationStore } from './notificationStore';
 
 export const useEventStore = defineStore('eventStore', {
   state: () => ({
     activeEvents: [],  // messages and phone calls
     eventPool: [],
     pastEvents: [],
-    // notificationMessage: '',
   }),
 
   getters: {
@@ -22,21 +22,33 @@ export const useEventStore = defineStore('eventStore', {
       this.eventPool = events; // Load events from events.json into eventPool
       this.refreshEvents(); // populate activeEvents
       this.pastEvents = [];
-      // this.notificationMessage = '';
     },
 
     dismissMessage(uid) {
       this.activeEvents = this.activeEvents.filter(e => e.uid !== uid);
     },
 
-    refreshEvents() {
-      console.log('refreshEvents');
-
+    handleExpiredEvents() {
       // remove expired events, decrementing expiresIn
       for (const event of this.activeEvents) {
         event.expiresIn--;
+        if (event.expiresIn <= 0) {
+          // send notification
+          useNotificationStore().addNotification({
+            id: crypto.randomUUID(),
+            notificationType: 'eventExpired',
+            object: {...event},
+          });
+        }
       }
+      // remove expired events
       this.activeEvents = this.activeEvents.filter(e => e.expiresIn > 0);
+    },
+
+    refreshEvents() {
+      console.log('refreshEvents');
+
+      this.handleExpiredEvents();
 
       // Randomly trigger 1-3 messages
       const numEvents = Math.floor(Math.random() * 2) + 1;
@@ -45,9 +57,9 @@ export const useEventStore = defineStore('eventStore', {
       }
 
       // 60% of the time, trigger 1 phone call if not first turn
-      // if (Math.random() < 0.6 && useGameStore().turn > 1) {
-      //   this.triggerRandomEvent('phone_call');
-      // }
+      if (Math.random() < 0.6 && useGameStore().turn > 1) {
+        this.triggerRandomEvent('phone_call');
+      }
     },
 
     triggerRandomEvent(eventType='message') {
@@ -55,10 +67,7 @@ export const useEventStore = defineStore('eventStore', {
       const randomEventIndex = Math.floor(Math.random() * possibleEvents.length);
       const randomEvent = possibleEvents[randomEventIndex];
 
-      // if this event already exists, don't trigger it again
-      // if (this.activeEvents.some(e => e.id === randomEvent.id)) return;
-
-      // set u
+      // setup event, add to activeEvents
       const uid = crypto.randomUUID();
       const sendDate = useGameStore().currentDay;
       const potentialSenders = useCharacterStore().contacts.filter(c => c.category === randomEvent.category);
@@ -93,15 +102,17 @@ export const useEventStore = defineStore('eventStore', {
       if (playerStore.influencePoints < choice.cost.ip || playerStore.money < choice.cost.money) return;
 
       // randomly select between positive and negative outcome; 90% likelihood of positive outcome
-      const outcome = Math.random() < 0.8 ? choice.positive_outcome : choice.negative_outcome;
-
-      if (choice && outcome) {
+      const positiveOutcome = Math.random() < 0.8;
+      const outcome = positiveOutcome ? choice.outcomes.find(o => o.effect === "positive") : choice.outcomes.find(o => o.effect === "negative");
+      if (outcome) {
         playerStore.updateStats(outcome);
         playerStore.modifyInfluencePoints(-choice.cost.ip);
         playerStore.modifyMoney(-choice.cost.money);
+        activeEvent.resolution = outcome; // remember the outcome
         this.logEvent(activeEvent, choice, outcome);
-        activeEvent.resolution = outcome;
         useGameStore().checkWinLose();
+      } else {
+        console.error('no outcome for choice', choice, eventUid);
       }
     },
 
@@ -110,18 +121,7 @@ export const useEventStore = defineStore('eventStore', {
       const outcomeString = Object.entries(statsChanged).map(([key, value]) => `${key}: ${value}`).join(', ');
       const eventLog = `${event.title} -- You chose: ${choice.label}. Outcome: ${outcome.message} Effect: ${outcomeString}`;
       this.pastEvents.unshift(eventLog);
-
-      // // also show the notification
-      // const notificationMessage = `<div class="mb-2">${outcome.message}</div><div class="font-bold mb-3">${outcomeString}</div>`;
-      // this.showNotification(notificationMessage);
-    },
-
-    // closeNotification() {
-    //   this.notificationMessage = '';
-    // },
-
-    // showNotification(message) {
-    //   this.notificationMessage = message;
-    // },
+      console.log('eventLog', eventLog);
+    }
   },
 });

@@ -10,18 +10,22 @@
       {
         "id": "accept_gig",
         "label": "Accept the Local Gig",
-        "positive_outcome": {
-          "money": 100,
-          "fame": 5,
-          "stress": -2,
-          "message": "The show was a hit! Fans loved the intimate setting, and the money helps too."
-        },
-        "negative_outcome": {
-          "money": 100,
-          "fame": -3,
-          "stress": 10,
-          "message": "The gig went poorly with technical issues, and fans seemed unimpressed. The stress really got to your star."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "money": 100,
+            "fame": 5,
+            "stress": -2,
+            "message": "The show was a hit! Fans loved the intimate setting, and the money helps too."
+          },
+          {
+            "effect": "negative",
+            "money": 100,
+            "fame": -3,
+            "stress": 10,
+            "message": "The gig went poorly with technical issues, and fans seemed unimpressed. The stress really got to your star."
+          }
+        ],
         "cost": {
           "ip": 5,
           "money": 0
@@ -30,16 +34,20 @@
       {
         "id": "decline_gig",
         "label": "Decline the Offer",
-        "positive_outcome": {
-          "fame": 0,
-          "stress": -3,
-          "message": "Declining the gig kept your star well-rested, with minimal impact on fame."
-        },
-        "negative_outcome": {
-          "fame": -2,
-          "stress": 2,
-          "message": "Fans were disappointed by the decline, seeing it as a missed opportunity."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 0,
+            "stress": -3,
+            "message": "Declining the gig kept your star well-rested, with minimal impact on fame."
+          },
+          {
+            "effect": "negative",
+            "fame": -2,
+            "stress": 2,
+            "message": "Fans were disappointed by the decline, seeing it as a missed opportunity."
+          }
+        ],
         "cost": {
           "ip": 0,
           "money": 0
@@ -52,24 +60,28 @@
     "type": "message",
     "category": "Promoter",
     "title": "Offer to Perform at a Music Festival",
-    "description": "A big regional music festival has invited your star to perform as an opening act. It’s a huge opportunity for exposure and money, but the demands are high.",
+    "description": "A big regional music festival has invited your star to perform as an opening act. It's a huge opportunity for exposure and money, but the demands are high.",
     "expiresIn": 3,
     "choices": [
       {
         "id": "book_festival",
         "label": "Book the Festival Performance",
-        "positive_outcome": {
-          "money": 1000,
-          "fame": 20,
-          "stress": 5,
-          "message": "The festival performance was a success! New fans and big earnings came rolling in, boosting your star’s fame significantly."
-        },
-        "negative_outcome": {
-          "money": 500,
-          "fame": 5,
-          "stress": 20,
-          "message": "Bad weather and sound issues made the festival a stressful experience with mixed reviews. Your star's stress shot up."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "money": 1000,
+            "fame": 20,
+            "stress": 5,
+            "message": "The festival performance was a success! New fans and big earnings came rolling in, boosting your star's fame significantly."
+          },
+          {
+            "effect": "negative",
+            "money": 500,
+            "fame": 5,
+            "stress": 20,
+            "message": "Bad weather and sound issues made the festival a stressful experience with mixed reviews. Your star's stress shot up."
+          }
+        ],
         "cost": {
           "ip": 15,
           "money": 500
@@ -78,16 +90,20 @@
       {
         "id": "pass_on_festival",
         "label": "Pass on the Festival",
-        "positive_outcome": {
-          "fame": -2,
-          "stress": -5,
-          "message": "Skipping the festival helped avoid a potentially risky situation. Fame took a minor hit, but stress levels stayed low."
-        },
-        "negative_outcome": {
-          "fame": -8,
-          "stress": 5,
-          "message": "The festival was a big hit without your star, leaving fans disappointed and fame significantly hurt."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": -2,
+            "stress": -5,
+            "message": "Skipping the festival helped avoid a potentially risky situation. Fame took a minor hit, but stress levels stayed low."
+          },
+          {
+            "effect": "negative",
+            "fame": -8,
+            "stress": 5,
+            "message": "The festival was a big hit without your star, leaving fans disappointed and fame significantly hurt."
+          }
+        ],
         "cost": {
           "ip": 0,
           "money": 0
@@ -105,18 +121,22 @@
       {
         "id": "book_tv_show",
         "label": "Book the TV Special",
-        "positive_outcome": {
-          "money": 2000,
-          "fame": 20,
-          "stress": 15,
-          "message": "The TV performance was flawless! Ratings soared, fans were thrilled, and fame shot up."
-        },
-        "negative_outcome": {
-          "money": 1000,
-          "fame": 8,
-          "stress": 25,
-          "message": "Technical issues plagued the performance, making it a challenging night with mixed reviews. The stress was overwhelming."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "money": 2000,
+            "fame": 20,
+            "stress": 15,
+            "message": "The TV performance was flawless! Ratings soared, fans were thrilled, and fame shot up."
+          },
+          {
+            "effect": "negative",
+            "money": 1000,
+            "fame": 8,
+            "stress": 25,
+            "message": "Technical issues plagued the performance, making it a challenging night with mixed reviews. The stress was overwhelming."
+          }
+        ],
         "cost": {
           "ip": 25,
           "money": 1000
@@ -125,16 +145,20 @@
       {
         "id": "decline_tv_show",
         "label": "Decline the TV Special",
-        "positive_outcome": {
-          "fame": -5,
-          "stress": -8,
-          "message": "Declining the appearance preserved your star's energy, with only a minor impact on fame."
-        },
-        "negative_outcome": {
-          "fame": -1,
-          "stress": 10,
-          "message": "Fans and industry insiders were disappointed by the no-show."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": -5,
+            "stress": -8,
+            "message": "Declining the appearance preserved your star's energy, with only a minor impact on fame."
+          },
+          {
+            "effect": "negative",
+            "fame": -1,
+            "stress": 10,
+            "message": "Fans and industry insiders were disappointed by the no-show."
+          }
+        ],
         "cost": {
           "ip": 0,
           "money": 0
@@ -153,16 +177,20 @@
       {
         "id": "attend",
         "label": "Attend the event",
-        "positive_outcome": {
-          "fame": 8,
-          "stress": 5,
-          "message": "The charity event was a success! Fans admired your star’s generosity, and fame increased noticeably."
-        },
-        "negative_outcome": {
-          "fame": 0,
-          "stress": 10,
-          "message": "The event didn’t go as planned, with few fans noticing and media unimpressed. The experience was unexpectedly stressful."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 8,
+            "stress": 5,
+            "message": "The charity event was a success! Fans admired your star's generosity, and fame increased noticeably."
+          },
+          {
+            "effect": "negative",
+            "fame": 0,
+            "stress": 10,
+            "message": "The event didn't go as planned, with few fans noticing and media unimpressed. The experience was unexpectedly stressful."
+          }
+        ],
         "cost": {
           "ip": 5,
           "money": 200
@@ -171,16 +199,20 @@
       {
         "id": "decline",
         "label": "Politely decline",
-        "positive_outcome": {
-          "fame": 0,
-          "stress": 0,
-          "message": "Declining had little effect, and your star avoided extra stress."
-        },
-        "negative_outcome": {
-          "fame": -8,
-          "stress": 5,
-          "message": "The decline disappointed fans who expected charity involvement, hurting fame more than expected."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 0,
+            "stress": 0,
+            "message": "Declining had little effect, and your star avoided extra stress."
+          },
+          {
+            "effect": "negative",
+            "fame": -8,
+            "stress": 5,
+            "message": "The decline disappointed fans who expected charity involvement, hurting fame more than expected."
+          }
+        ],
         "cost": {
           "ip": 0,
           "money": 0
@@ -198,16 +230,20 @@
       {
         "id": "deny",
         "label": "Deny the Story",
-        "positive_outcome": {
-          "fame": 10,
-          "stress": 2,
-          "message": "The denial was successful, and the story died down quickly, with a slight boost to fame."
-        },
-        "negative_outcome": {
-          "fame": -10,
-          "stress": 15,
-          "message": "The denial backfired, as more 'sources' confirmed the story, damaging fame further and causing a lot of stress."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 10,
+            "stress": 2,
+            "message": "The denial was successful, and the story died down quickly, with a slight boost to fame."
+          },
+          {
+            "effect": "negative",
+            "fame": -10,
+            "stress": 15,
+            "message": "The denial backfired, as more 'sources' confirmed the story, damaging fame further and causing a lot of stress."
+          }
+        ],
         "cost": {
           "ip": 10,
           "money": 0
@@ -216,16 +252,20 @@
       {
         "id": "ignore",
         "label": "Ignore it",
-        "positive_outcome": {
-          "fame": 0,
-          "stress": -5,
-          "message": "Ignoring it worked out, and the story lost traction quickly."
-        },
-        "negative_outcome": {
-          "fame": -8,
-          "stress": 15,
-          "message": "Ignoring the story led to rumors spiraling, hurting fame and adding significant stress."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 0,
+            "stress": -5,
+            "message": "Ignoring it worked out, and the story lost traction quickly."
+          },
+          {
+            "effect": "negative",
+            "fame": -8,
+            "stress": 15,
+            "message": "Ignoring the story led to rumors spiraling, hurting fame and adding significant stress."
+          }
+        ],
         "cost": {
           "ip": 0,
           "money": 0
@@ -243,16 +283,20 @@
       {
         "id": "confirm",
         "label": "Confirm the Relationship",
-        "positive_outcome": {
-          "fame": 15,
-          "stress": -10,
-          "message": "The public loves it! Fame has surged, and your star is relieved to have the truth out in the open."
-        },
-        "negative_outcome": {
-          "fame": -5,
-          "stress": 20,
-          "message": "Fans were shocked and disappointed by the revelation, causing a dip in fame and a big increase in stress."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 15,
+            "stress": -10,
+            "message": "The public loves it! Fame has surged, and your star is relieved to have the truth out in the open."
+          },
+          {
+            "effect": "negative",
+            "fame": -5,
+            "stress": 20,
+            "message": "Fans were shocked and disappointed by the revelation, causing a dip in fame and a big increase in stress."
+          }
+        ],
         "cost": {
           "ip": 15,
           "money": 0
@@ -261,16 +305,20 @@
       {
         "id": "deny",
         "label": "Deny the Rumor",
-        "positive_outcome": {
-          "fame": 5,
-          "stress": 5,
-          "message": "The denial worked, and fans seem satisfied with the response."
-        },
-        "negative_outcome": {
-          "fame": -10,
-          "stress": 15,
-          "message": "The denial didn’t convince anyone, leading to stress and negative publicity."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 5,
+            "stress": 5,
+            "message": "The denial worked, and fans seem satisfied with the response."
+          },
+          {
+            "effect": "negative",
+            "fame": -10,
+            "stress": 15,
+            "message": "The denial didn't convince anyone, leading to stress and negative publicity."
+          }
+        ],
         "cost": {
           "ip": 10,
           "money": 0
@@ -288,16 +336,20 @@
       {
         "id": "apologize",
         "label": "Issue an Apology",
-        "positive_outcome": {
-          "fame": 8,
-          "stress": 5,
-          "message": "Fans appreciated the apology, and fame has taken only a minor hit."
-        },
-        "negative_outcome": {
-          "fame": -10,
-          "stress": 15,
-          "message": "The apology seemed insincere, leading to negative backlash and increased stress."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 8,
+            "stress": 5,
+            "message": "Fans appreciated the apology, and fame has taken only a minor hit."
+          },
+          {
+            "effect": "negative",
+            "fame": -10,
+            "stress": 15,
+            "message": "The apology seemed insincere, leading to negative backlash and increased stress."
+          }
+        ],
         "cost": {
           "ip": 5,
           "money": 200
@@ -306,16 +358,20 @@
       {
         "id": "deny",
         "label": "Deny the Incident",
-        "positive_outcome": {
-          "fame": 3,
-          "stress": 5,
-          "message": "The denial worked well enough, with only minor stress added."
-        },
-        "negative_outcome": {
-          "fame": -15,
-          "stress": 20,
-          "message": "The denial backfired as more witnesses came forward, resulting in a major hit to fame and a surge in stress."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 3,
+            "stress": 5,
+            "message": "The denial worked well enough, with only minor stress added."
+          },
+          {
+            "effect": "negative",
+            "fame": -15,
+            "stress": 20,
+            "message": "The denial backfired as more witnesses came forward, resulting in a major hit to fame and a surge in stress."
+          }
+        ],
         "cost": {
           "ip": 10,
           "money": 0
@@ -328,21 +384,25 @@
     "type": "phone_call",
     "category": "Media Outlet",
     "title": "Lip-Syncing Scandal",
-    "description": "The press has caught wind that your star may have lip-synced at a recent live performance. They’re demanding a statement.",
+    "description": "The press has caught wind that your star may have lip-synced at a recent live performance. They're demanding a statement.",
     "choices": [
       {
         "id": "admit",
         "label": "Admit to Lip-Syncing",
-        "positive_outcome": {
-          "fame": -5,
-          "stress": 10,
-          "message": "Fans appreciated the honesty, though fame took a small hit."
-        },
-        "negative_outcome": {
-          "fame": -15,
-          "stress": 15,
-          "message": "Admitting to lip-syncing led to backlash and a loss in fame and credibility."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": -5,
+            "stress": 10,
+            "message": "Fans appreciated the honesty, though fame took a small hit."
+          },
+          {
+            "effect": "negative",
+            "fame": -15,
+            "stress": 15,
+            "message": "Admitting to lip-syncing led to backlash and a loss in fame and credibility."
+          }
+        ],
         "cost": {
           "ip": 5,
           "money": 0
@@ -351,16 +411,20 @@
       {
         "id": "deny",
         "label": "Deny the Accusation",
-        "positive_outcome": {
-          "fame": 5,
-          "stress": 5,
-          "message": "The denial was effective, and fans were convinced."
-        },
-        "negative_outcome": {
-          "fame": -10,
-          "stress": 15,
-          "message": "Fans weren’t convinced, leading to backlash and a hit to fame."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 5,
+            "stress": 5,
+            "message": "The denial was effective, and fans were convinced."
+          },
+          {
+            "effect": "negative",
+            "fame": -10,
+            "stress": 15,
+            "message": "Fans weren't convinced, leading to backlash and a hit to fame."
+          }
+        ],
         "cost": {
           "ip": 10,
           "money": 0
@@ -378,16 +442,20 @@
       {
         "id": "deny",
         "label": "Deny the Accusation",
-        "positive_outcome": {
-          "fame": 8,
-          "stress": 10,
-          "message": "The denial worked, and fans are siding with your star."
-        },
-        "negative_outcome": {
-          "fame": -12,
-          "stress": 20,
-          "message": "Fans weren’t convinced, leading to a hit in fame and added stress from the backlash."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 8,
+            "stress": 10,
+            "message": "The denial worked, and fans are siding with your star."
+          },
+          {
+            "effect": "negative",
+            "fame": -12,
+            "stress": 20,
+            "message": "Fans weren't convinced, leading to a hit in fame and added stress from the backlash."
+          }
+        ],
         "cost": {
           "ip": 10,
           "money": 0
@@ -396,16 +464,20 @@
       {
         "id": "embrace",
         "label": "Embrace the Feud",
-        "positive_outcome": {
-          "fame": 15,
-          "stress": 10,
-          "message": "The feud has fueled fan interest, and fame has spiked thanks to the publicity!"
-        },
-        "negative_outcome": {
-          "fame": -5,
-          "stress": 25,
-          "message": "The feud turned ugly, with fans feeling disillusioned. Fame took a hit, and stress surged."
-        },
+        "outcomes": [
+          {
+            "effect": "positive",
+            "fame": 15,
+            "stress": 10,
+            "message": "The feud has fueled fan interest, and fame has spiked thanks to the publicity!"
+          },
+          {
+            "effect": "negative",
+            "fame": -5,
+            "stress": 25,
+            "message": "The feud turned ugly, with fans feeling disillusioned. Fame took a hit, and stress surged."
+          }
+        ],
         "cost": {
           "ip": 5,
           "money": 0

@@ -1,5 +1,6 @@
 <template>
   <main v-if="!gameStore.isGameOver" class="p-4">
+    <Notifications />
     <PhoneCalls v-if="eventStore.activePhoneCalls.length > 0" />
     <header class="flex justify-between items-center px-4 py-2 border-black border mb-4">
         <div>
@@ -12,7 +13,7 @@
       <div class="md:w-1/3 w-full">
         <Stats />
         <Contacts />
-        <EventLog />
+        <!-- <EventLog /> -->
       </div>
       <div class="md:w-2/3 w-full">
         <!-- <Calendar /> -->
@@ -35,18 +36,17 @@
 import { computed, onMounted } from 'vue';
 
 import Stats from "../components/Stats.vue";
-import EventLog from "../components/EventLog.vue";
+// import EventLog from "../components/EventLog.vue";
 import Messages from "../components/Messages.vue";
 import PhoneCalls from "../components/PhoneCalls.vue";
 // import Calendar from "../components/Calendar.vue";
-// import Notification from "../components/Notification.vue";
+import Notifications from "../components/Notifications.vue";
 import Contacts from "../components/Contacts.vue";
 import { useGameStore } from '../stores/gameStore';
 const gameStore = useGameStore();
 
 import { useEventStore } from '../stores/eventStore';
 const eventStore = useEventStore();
-
 const canAdvance = computed(() => {
   return eventStore.activePhoneCalls.length === 0;
 });

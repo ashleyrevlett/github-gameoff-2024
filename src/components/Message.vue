@@ -44,6 +44,7 @@
       class="bg-yellow-200 p-4 my-4"
     >
       <p>{{ event.resolution.message }}</p>
+      <div v-if="effect" class="mt-1 font-bold text-sm capitalize">{{ effect}}</div>
       <button class="btn mt-2" @click="emit('dismiss')">Dismiss</button>
     </div>
 
@@ -66,6 +67,17 @@ const props = defineProps({
 
 const emit = defineEmits(['dismiss']);
 const offset = computed(() => props.index * 10);
+
+const effect = computed(() => {
+  if (props.event.resolution) {
+    const effectedStats = Object.entries(props.event.resolution).filter(([key, value]) => key !== 'effect' && key !== 'message' && value !== 0);
+    return effectedStats.map(([key, value]) => {
+      return key + ': ' + (value.toString().startsWith('-') ? '' : '+') + value;
+    }).join(', ');
+  }
+  return null;
+});
+
 
 function handleChoice(choiceId) {
   eventStore.resolveEvent(props.event.uid, choiceId);
