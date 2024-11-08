@@ -6,6 +6,7 @@
     "title": "Offer for a Local Gig",
     "description": "A well-known club in your hometown has offered your star a chance to perform for a small crowd. This could be a good way to earn some extra cash and build a local following.",
     "expiresIn": 2,
+    "condition": "fame < 30",
     "choices": [
       {
         "id": "accept_gig",
@@ -62,6 +63,7 @@
     "title": "Offer to Perform at a Music Festival",
     "description": "A big regional music festival has invited your star to perform as an opening act. It's a huge opportunity for exposure and money, but the demands are high.",
     "expiresIn": 3,
+    "condition": "fame >= 20 && money >= 500",
     "choices": [
       {
         "id": "book_festival",
@@ -117,6 +119,7 @@
     "category": "Media Outlet",
     "title": "Prime-Time TV Special",
     "description": "A popular TV network is offering a paid prime-time slot for your star to perform live. This could be a massive payday, but also a high-stress opportunity that requires careful planning.",
+    "condition": "fame >= 50 && money >= 1000",
     "choices": [
       {
         "id": "book_tv_show",
@@ -173,6 +176,7 @@
     "title": "Charity Event Invitation",
     "description": "Your star is invited to a high-profile charity event. Should they attend?",
     "expiresIn": 2,
+    "condition": "fame >= 40 && stress <= 50",
     "choices": [
       {
         "id": "attend",
@@ -226,6 +230,7 @@
     "category": "Media Outlet",
     "title": "Tabloid Scandal",
     "description": "A tabloid has a story on your star's wild party. They're giving you a chance to respond before it goes live.",
+    "condition": "fame >= 40",
     "choices": [
       {
         "id": "deny",
@@ -273,10 +278,12 @@
       }
     ]
   },
+
   {
     "id": "secret_relationship",
     "type": "phone_call",
     "category": "Media Outlet",
+    "condition": "fame > 30",
     "title": "Secret Relationship Leaked",
     "description": "The press has uncovered your star's secret relationship with a controversial figure. You need to respond quickly!",
     "choices": [
@@ -330,6 +337,7 @@
     "id": "backstage_tantrum",
     "type": "phone_call",
     "category": "Media Outlet",
+    "condition": "fame > 40",
     "title": "Backstage Tantrum Reported",
     "description": "Rumors are circulating about your star having a tantrum backstage at a recent show. The press is asking for a response.",
     "choices": [
@@ -383,6 +391,7 @@
     "id": "lip_sync_scandal",
     "type": "phone_call",
     "category": "Media Outlet",
+    "condition": "fame > 50",
     "title": "Lip-Syncing Scandal",
     "description": "The press has caught wind that your star may have lip-synced at a recent live performance. They're demanding a statement.",
     "choices": [
@@ -436,6 +445,7 @@
     "id": "rival_feud",
     "type": "phone_call",
     "category": "Media Outlet",
+    "condition": "fame > 60",
     "title": "Feud with a Rival Star",
     "description": "A rival pop star has accused your star of stealing their song idea, and the press is all over it. How do you respond?",
     "choices": [

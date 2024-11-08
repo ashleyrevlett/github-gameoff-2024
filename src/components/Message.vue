@@ -41,7 +41,11 @@
     </div>
     <div
       v-else
-      class="bg-yellow-200 p-4 my-4"
+      class="p-4 my-4"
+      :class="{
+        'bg-green-100 border-green-500 border-2': event.resolution.effect === 'positive',
+        'bg-red-100 border-red-500 border-2': event.resolution.effect === 'negative'
+      }"
     >
       <p>{{ event.resolution.message }}</p>
       <div v-if="effect" class="mt-1 font-bold text-sm capitalize">{{ effect}}</div>

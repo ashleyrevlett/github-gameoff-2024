@@ -63,15 +63,34 @@ export const useEventStore = defineStore('eventStore', {
     },
 
     triggerRandomEvent(eventType='message') {
-      const possibleEvents = this.eventPool.filter(e => e.type === eventType);
+
+      // conditions need fame, money, and stress to be defined
+      const fame = usePlayerStore().fame;
+      const money = usePlayerStore().money;
+      const stress = usePlayerStore().stress;
+      const possibleEvents = this.eventPool.filter(e => {
+        const passesCondition = e.condition ? eval(e.condition) : true;
+        return e.type === eventType && passesCondition;
+      });
+      if (!possibleEvents.length) {
+        console.log('no possibleEvents', eventType);
+        return;
+      }
+
       const randomEventIndex = Math.floor(Math.random() * possibleEvents.length);
       const randomEvent = possibleEvents[randomEventIndex];
+
+      if (!randomEvent) {
+        console.error('no randomEvent', eventType, possibleEvents, randomEventIndex);
+        return;
+      }
 
       // setup event, add to activeEvents
       const uid = crypto.randomUUID();
       const sendDate = useGameStore().currentDay;
-      const potentialSenders = useCharacterStore().contacts.filter(c => c.category === randomEvent.category);
-      if (potentialSenders.length > 0) {
+      try {
+        console.log('randomEvent', randomEvent);
+        const potentialSenders = useCharacterStore().contacts.filter(c => c.category === randomEvent.category);
         const randomSender = potentialSenders[Math.floor(Math.random() * potentialSenders.length)];
         this.activeEvents.unshift({
           ...randomEvent,
@@ -80,8 +99,8 @@ export const useEventStore = defineStore('eventStore', {
           resolution: null,
           sendDate: sendDate,
         });
-      } else {
-        console.log('no potential senders for', randomEvent.category);
+      } catch (error) {
+        console.error('error getting potential senders', error, randomEvent.category);
       }
     },
 

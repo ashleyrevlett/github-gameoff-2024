@@ -13,12 +13,11 @@ export const useCharacterStore = defineStore('characterStore', {
     initialize() {
       this.characterPool = characters; // Load characters from characters.json into characterPool
       // start with low influence contacts
-      this.contacts = this.characterPool.filter(c => c.influence <= 2);
+      this.contacts = this.characterPool.filter(c => c.influence <= 4);
     },
 
     refreshContacts() {
-      const influence = Math.max(2, Math.ceil(usePlayerStore().fame / 10));
-      console.log('influence', influence);
+      const influence = Math.max(4, Math.ceil(usePlayerStore().fame / 10));
       this.contacts = this.characterPool.filter(c => c.influence <= influence);
     },
 
