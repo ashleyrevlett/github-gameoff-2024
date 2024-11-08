@@ -1,7 +1,7 @@
 <template>
-  <div class="border border-black p-4">
+  <div class="p-4">
     <div>
-      <p class="font-bold">Messages</p>
+      <p class="font-bold mb-2">Messages</p>
       <TransitionGroup name="fade" tag="div" v-if="activeMessages.length > 0">
         <Message v-for="message in activeMessages" :key="message.id" :event="message" />
       </TransitionGroup>
@@ -20,15 +20,3 @@ const eventStore = useEventStore();
 const { activeMessages } = storeToRefs(eventStore);
 </script>
 
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

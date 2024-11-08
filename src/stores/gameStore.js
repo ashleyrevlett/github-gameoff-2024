@@ -23,28 +23,28 @@ export const useGameStore = defineStore('gameStore', {
       this.nextTurn();
     },
 
-    nextTurn() {
-      const playerStore = usePlayerStore();
 
+    checkWinLose() {
+      const playerStore = usePlayerStore();
       if (playerStore.reputation >= 100 && playerStore.popularity >= 100 && playerStore.stress <= 100) {
         this.isGameOver = true;
         this.gameOverMessage = 'The artists is a superstar! You win!';
         return;
       }
 
-      if (usePlayerStore().stress >= 100) {
+      if (playerStore.stress >= 100) {
         this.isGameOver = true;
         this.gameOverMessage = 'The artist burned out and quit';
         return;
       }
 
-      if (usePlayerStore().popularity <= 0) {
+      if (playerStore.popularity <= 0) {
         this.isGameOver = true;
         this.gameOverMessage = 'The artist lost all popularity';
         return;
       }
 
-      if (usePlayerStore().reputation <= 0) {
+      if (playerStore.reputation <= 0) {
         this.isGameOver = true;
         this.gameOverMessage = 'The artist lost all reputation';
         return;
@@ -56,12 +56,20 @@ export const useGameStore = defineStore('gameStore', {
         return;
       }
 
+    },
+
+    nextTurn() {
+      this.checkWinLose();
+      if (this.isGameOver) {
+        return;
+      }
+
+      // reset resources and events
       useEventStore().refreshEvents();
       usePlayerStore().refreshResources();
 
-      this.turn++;
-
       // advance the day
+      this.turn++;
       this.currentDay.setDate(this.currentDay.getDate() + 1);
     },
   },

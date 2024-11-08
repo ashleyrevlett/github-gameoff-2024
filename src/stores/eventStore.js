@@ -1,15 +1,13 @@
-// /src/stores/eventStore.js
 import { defineStore } from 'pinia';
-// import tabloidScandalEvent from '../events/tabloidScandalEvent';
-// import publicMeltdownEvent from '../events/publicMeltdownEvent';
 import events from '../events/events.json'
 import { usePlayerStore } from './playerStore';
-
+import { useGameStore } from './gameStore';
 export const useEventStore = defineStore('eventStore', {
   state: () => ({
     activeEvents: [],  // messages and phone calls
     eventPool: [],
     pastEvents: [],
+    notificationMessage: '',
   }),
 
   getters: {
@@ -22,6 +20,7 @@ export const useEventStore = defineStore('eventStore', {
       this.eventPool = events; // Load events from events.json into eventPool
       this.refreshEvents(); // populate activeEvents
       this.pastEvents = [];
+      this.notificationMessage = '';
     },
 
     refreshEvents() {
@@ -79,6 +78,8 @@ export const useEventStore = defineStore('eventStore', {
         playerStore.modifyMoney(-choice.cost.money);
         this.logEvent(activeEvent, choice, outcome);
         this.activeEvents = this.activeEvents.filter(e => e.id !== eventId);
+
+        useGameStore().checkWinLose();
       }
     },
 
@@ -87,6 +88,18 @@ export const useEventStore = defineStore('eventStore', {
       const outcomeString = Object.entries(statsChanged).map(([key, value]) => `${key}: ${value}`).join(', ');
       const eventLog = `${event.title} -- You chose: ${choice.label}. Outcome: ${outcome.message} Effect: ${outcomeString}`;
       this.pastEvents.unshift(eventLog);
-    }
+
+      // also show the notification
+      const notificationMessage = `<div class="mb-2">${outcome.message}</div><div class="font-bold mb-3">${outcomeString}</div>`;
+      this.showNotification(notificationMessage);
+    },
+
+    closeNotification() {
+      this.notificationMessage = '';
+    },
+
+    showNotification(message) {
+      this.notificationMessage = message;
+    },
   },
 });

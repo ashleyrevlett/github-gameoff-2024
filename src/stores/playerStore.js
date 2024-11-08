@@ -49,7 +49,7 @@ export const usePlayerStore = defineStore('playerStore', {
     },
     refreshResources() {
       this.influencePoints += 10;
-      // this.money += 100;
+      this.money += 100;
     },
   },
 });

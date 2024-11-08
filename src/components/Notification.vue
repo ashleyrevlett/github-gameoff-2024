@@ -1,6 +1,6 @@
 <template>
-  <div class="notification" v-if="visible">
-    <p>{{ message }}</p>
+  <div class="notification">
+    <div v-html="message"></div>
     <button class="btn p-1 text-xs" @click="closeNotification">OK</button>
   </div>
 </template>
@@ -9,7 +9,6 @@
 export default {
   props: {
     message: String,
-    visible: Boolean,
   },
   methods: {
     closeNotification() {
@@ -21,12 +20,15 @@ export default {
 
 <style scoped>
 .notification {
-  @apply bg-yellow-400 text-sm px-3 py-1 border border-t-0 border-black;
-  @apply flex flex-row items-center gap-3;
+  @apply bg-white text-sm px-3 py-1 border border-black p-3 text-center;
+  @apply flex flex-col items-center justify-center gap-3;
 
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  min-height: 30vh;
+  overflow-y: scroll;
 }
 </style>
