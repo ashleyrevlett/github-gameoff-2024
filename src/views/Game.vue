@@ -12,6 +12,7 @@
           <button @click="nextTurn" class="btn btn-green" :disabled="!canAdvance">Skip to Next Day</button>
         </header>
         <Stats />
+        <Contacts />
         <EventLog />
       </div>
       <div class="w-2/3">
@@ -40,7 +41,7 @@ import Messages from "../components/Messages.vue";
 import PhoneCalls from "../components/PhoneCalls.vue";
 // import Calendar from "../components/Calendar.vue";
 import Notification from "../components/Notification.vue";
-
+import Contacts from "../components/Contacts.vue";
 import { useGameStore } from '../stores/gameStore';
 const gameStore = useGameStore();
 

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import events from '../events/events.json'
+import events from '../data/events.json'
 import { usePlayerStore } from './playerStore';
 import { useGameStore } from './gameStore';
 export const useEventStore = defineStore('eventStore', {
