@@ -37,8 +37,8 @@ export const useEventStore = defineStore('eventStore', {
       const messageEvents = this.eventPool.filter(e => e.type === 'message');
       const phoneEvents = this.eventPool.filter(e => e.type === 'phone_call');
 
-      // Randomly trigger 1-4 messages
-      const numEvents = Math.floor(Math.random() * 3) + 1;
+      // Randomly trigger 1-3 messages
+      const numEvents = Math.ceil(Math.random() * 3);
       for (let i = 0; i < numEvents; i++) {
         const randomMessageIndex = Math.floor(Math.random() * messageEvents.length);
         const randomMessage = messageEvents[randomMessageIndex];

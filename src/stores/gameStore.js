@@ -38,15 +38,9 @@ export const useGameStore = defineStore('gameStore', {
         return;
       }
 
-      if (playerStore.popularity <= 0) {
+      if (playerStore.popularity <= 0 && playerStore.reputation <= 0) {
         this.isGameOver = true;
-        this.gameOverMessage = 'The artist lost all popularity';
-        return;
-      }
-
-      if (playerStore.reputation <= 0) {
-        this.isGameOver = true;
-        this.gameOverMessage = 'The artist lost all reputation';
+        this.gameOverMessage = 'The artist lost all popularity and reputation';
         return;
       }
 
