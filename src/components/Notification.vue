@@ -20,7 +20,7 @@ export default {
 
 <style scoped>
 .notification {
-  @apply bg-white text-sm px-3 py-1 border border-black p-3 text-center;
+  /* @apply bg-white text-sm px-3 py-1 border border-black p-3 text-center;
   @apply flex flex-col items-center justify-center gap-3;
 
   position: fixed;
@@ -29,6 +29,7 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 100;
   min-height: 30vh;
-  overflow-y: scroll;
+  overflow-y: scroll; */
+  @apply bg-yellow-200 p-4;
 }
 </style>

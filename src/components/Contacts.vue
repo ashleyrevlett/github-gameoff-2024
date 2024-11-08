@@ -1,9 +1,11 @@
 <template>
   <div class="p-4 border border-black mb-4">
     <p class="font-bold mb-2">Contacts</p>
-    <TransitionGroup name="fade" tag="div" v-if="contacts.length > 0">
-      <Contact v-for="contact in contacts" :key="contact.name" :contact="contact" />
-    </TransitionGroup>
+    <div class="overflow-y-auto max-h-[200px]">
+      <TransitionGroup name="fade" tag="div" v-if="contacts.length > 0">
+        <Contact v-for="contact in contacts" :key="contact.name" :contact="contact" />
+      </TransitionGroup>
+    </div>
   </div>
 </template>
 

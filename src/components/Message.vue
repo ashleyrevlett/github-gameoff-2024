@@ -1,16 +1,25 @@
 <template>
-  <div class="border border-black p-3">
+  <div
+    class="border border-black p-4 z-10 bg-white absolute transition-all duration-300 w-full"
+    :style="{ left: offset + 'px', top: offset + 'px' }"
+    :class="{
+      'min-h-[50vh]': event.type === 'message',
+      'border-red-500': event.expiresIn === 0 && event.type === 'message',
+      'z-30': isActive
+     }">
     <h2 class="text-lg font-bold">{{ event.title }}</h2>
     <h3 class="font-bold">From: {{ event.sender.name }}, {{ event.sender.organization }}</h3>
+    <p v-if="event.type === 'message'" class="mb-3">{{ event.sendDate.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }) }}</p>
     <p class="mb-3">{{ event.description }}</p>
-    <p v-if="event.expiresIn >= 0" class="mt-2 font-bold text-red-500 text-sm mb-3">Response due within {{ event.expiresIn }} days</p>
-    <p v-if="event.expiresIn === 0 && event.type === 'message'" class="mt-2 font-bold text-red-500 text-sm mb-3">Response due today!</p>
-    <div class="choices flex flex-row gap-1">
+    <div
+      v-if="!event.resolution"
+    >
+    <div class="choices flex flex-row gap-2">
       <button
         v-for="choice in event.choices"
         :key="choice.id"
         @click="handleChoice(choice.id)"
-        class="btn m-1"
+        class="btn btn-red m-1 w-1/2"
         :disabled="choice.cost.ip > playerStore.influencePoints || choice.cost.money > playerStore.money"
       >
         <span>{{ choice.label }}</span>
@@ -25,10 +34,24 @@
         </div>
       </button>
     </div>
+        <div class="my-4">
+        <p v-if="event.expiresIn >= 0" class="font-bold text-red-500 text-sm">Response due within {{ event.expiresIn }} days</p>
+        <p v-if="event.expiresIn === 0 && event.type === 'message'" class="font-bold text-red-500 text-sm">Response due today!</p>
+      </div>
+    </div>
+    <div
+      v-else
+      class="bg-yellow-200 p-4 my-4"
+    >
+      <p>{{ event.resolution.message }}</p>
+      <button class="btn mt-2" @click="emit('dismiss')">Dismiss</button>
+    </div>
+
   </div>
 </template>
 
 <script setup>
+import { computed, defineEmits } from 'vue';
 import { useEventStore } from '../stores/eventStore';
 import { usePlayerStore } from '../stores/playerStore';
 
@@ -37,10 +60,14 @@ const playerStore = usePlayerStore();
 
 const props = defineProps({
   event: Object,
+  isActive: Boolean,
+  index: Number
 });
 
+const emit = defineEmits(['dismiss']);
+const offset = computed(() => props.index * 10);
+
 function handleChoice(choiceId) {
-  console.log('handleChoice', choiceId);
-  eventStore.resolveEvent(props.event.id, choiceId);
+  eventStore.resolveEvent(props.event.uid, choiceId);
 }
 </script>

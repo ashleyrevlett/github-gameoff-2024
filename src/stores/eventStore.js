@@ -9,7 +9,7 @@ export const useEventStore = defineStore('eventStore', {
     activeEvents: [],  // messages and phone calls
     eventPool: [],
     pastEvents: [],
-    notificationMessage: '',
+    // notificationMessage: '',
   }),
 
   getters: {
@@ -22,7 +22,11 @@ export const useEventStore = defineStore('eventStore', {
       this.eventPool = events; // Load events from events.json into eventPool
       this.refreshEvents(); // populate activeEvents
       this.pastEvents = [];
-      this.notificationMessage = '';
+      // this.notificationMessage = '';
+    },
+
+    dismissMessage(uid) {
+      this.activeEvents = this.activeEvents.filter(e => e.uid !== uid);
     },
 
     refreshEvents() {
@@ -41,32 +45,46 @@ export const useEventStore = defineStore('eventStore', {
       }
 
       // 60% of the time, trigger 1 phone call if not first turn
-      if (Math.random() < 0.6 && useGameStore().turn > 1) {
-        this.triggerRandomEvent('phone_call');
-      }
+      // if (Math.random() < 0.6 && useGameStore().turn > 1) {
+      //   this.triggerRandomEvent('phone_call');
+      // }
     },
 
     triggerRandomEvent(eventType='message') {
       const possibleEvents = this.eventPool.filter(e => e.type === eventType);
       const randomEventIndex = Math.floor(Math.random() * possibleEvents.length);
       const randomEvent = possibleEvents[randomEventIndex];
+
+      // if this event already exists, don't trigger it again
+      // if (this.activeEvents.some(e => e.id === randomEvent.id)) return;
+
+      // set u
       const uid = crypto.randomUUID();
+      const sendDate = useGameStore().currentDay;
       const potentialSenders = useCharacterStore().contacts.filter(c => c.category === randomEvent.category);
       if (potentialSenders.length > 0) {
         const randomSender = potentialSenders[Math.floor(Math.random() * potentialSenders.length)];
-        this.activeEvents.unshift({ ...randomEvent, id: uid, sender: randomSender });
+        this.activeEvents.unshift({
+          ...randomEvent,
+          uid: uid,
+          sender: randomSender,
+          resolution: null,
+          sendDate: sendDate,
+        });
       } else {
         console.log('no potential senders for', randomEvent.category);
       }
     },
 
-    resolveEvent(eventId, choiceId) {
+    resolveEvent(eventUid, choiceId) {
       /*
       Apply the outcome of the choice to the player's stats.
       Remove the event from the active list.
       Log the event to the pastEvents array.
+      @return outcome
       */
-     const activeEvent = this.activeEvents.find(e => e.id === eventId);
+
+     const activeEvent = this.activeEvents.find(e => e.uid === eventUid);
       if (!activeEvent) return;
 
       const playerStore = usePlayerStore();
@@ -82,8 +100,7 @@ export const useEventStore = defineStore('eventStore', {
         playerStore.modifyInfluencePoints(-choice.cost.ip);
         playerStore.modifyMoney(-choice.cost.money);
         this.logEvent(activeEvent, choice, outcome);
-        this.activeEvents = this.activeEvents.filter(e => e.id !== eventId);
-
+        activeEvent.resolution = outcome;
         useGameStore().checkWinLose();
       }
     },
@@ -94,17 +111,17 @@ export const useEventStore = defineStore('eventStore', {
       const eventLog = `${event.title} -- You chose: ${choice.label}. Outcome: ${outcome.message} Effect: ${outcomeString}`;
       this.pastEvents.unshift(eventLog);
 
-      // also show the notification
-      const notificationMessage = `<div class="mb-2">${outcome.message}</div><div class="font-bold mb-3">${outcomeString}</div>`;
-      this.showNotification(notificationMessage);
+      // // also show the notification
+      // const notificationMessage = `<div class="mb-2">${outcome.message}</div><div class="font-bold mb-3">${outcomeString}</div>`;
+      // this.showNotification(notificationMessage);
     },
 
-    closeNotification() {
-      this.notificationMessage = '';
-    },
+    // closeNotification() {
+    //   this.notificationMessage = '';
+    // },
 
-    showNotification(message) {
-      this.notificationMessage = message;
-    },
+    // showNotification(message) {
+    //   this.notificationMessage = message;
+    // },
   },
 });
