@@ -56,8 +56,8 @@ export const useEventStore = defineStore('eventStore', {
         this.triggerRandomEvent('message');
       }
 
-      // 60% of the time, trigger 1 phone call if not first turn
-      if (Math.random() < 0.6 && useGameStore().turn > 1) {
+      // X% of the time, trigger 1 phone call if not first turn
+      if (Math.random() < 0.8 && useGameStore().turn > 1) {
         this.triggerRandomEvent('phone_call');
       }
     },

@@ -63,7 +63,6 @@ function previousMessage() {
 }
 
 function dismissMessage() {
-  eventStore.dismissMessage(activeMessages.value[currentIndex.value].uid);
   currentIndex.value = Math.max(currentIndex.value - 1, 0);
 }
 </script>

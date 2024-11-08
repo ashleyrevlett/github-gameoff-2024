@@ -1,6 +1,8 @@
 <template>
   <div class="notifications absolute top-0 left-0 w-full z-60">
-    <Notification v-for="notification in notifications" :key="notification.id" :notification="notification" />
+    <transition-group name="fade">
+      <Notification v-for="notification in notifications" :key="notification.id" :notification="notification" />
+    </transition-group>
   </div>
 </template>
 

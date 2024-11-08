@@ -45,7 +45,7 @@
     >
       <p>{{ event.resolution.message }}</p>
       <div v-if="effect" class="mt-1 font-bold text-sm capitalize">{{ effect}}</div>
-      <button class="btn mt-2" @click="emit('dismiss')">Dismiss</button>
+      <button class="btn mt-2" @click="dismissMessage">Dismiss</button>
     </div>
 
   </div>
@@ -66,6 +66,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['dismiss']);
+
 const offset = computed(() => props.index * 10);
 
 const effect = computed(() => {
@@ -81,5 +82,9 @@ const effect = computed(() => {
 
 function handleChoice(choiceId) {
   eventStore.resolveEvent(props.event.uid, choiceId);
+}
+
+function dismissMessage() {
+  eventStore.dismissMessage(props.event.uid);
 }
 </script>
