@@ -35,7 +35,7 @@ export const useEventStore = defineStore('eventStore', {
         if (event.expiresIn <= 0) {
           // send notification
           useNotificationStore().addNotification({
-            id: crypto.randomUUID(),
+            id: window.crypto.randomUUID(),
             notificationType: 'eventExpired',
             object: {...event},
           });
@@ -68,8 +68,14 @@ export const useEventStore = defineStore('eventStore', {
       const fame = usePlayerStore().fame;
       const money = usePlayerStore().money;
       const stress = usePlayerStore().stress;
+
       const possibleEvents = this.eventPool.filter(e => {
-        const passesCondition = e.condition ? eval(e.condition) : true;
+        // pass context to eval so it works in prod builds
+        const context = { fame, money, stress };
+        // const passesCondition = e.condition ? eval(`with (context) { ${e.condition} }`) : true;
+        const passesCondition = e.condition
+          ? new Function('fame', 'money', 'stress', `return ${e.condition}`)(fame, money, stress)
+          : true;
         return e.type === eventType && passesCondition;
       });
       if (!possibleEvents.length) {
@@ -86,7 +92,7 @@ export const useEventStore = defineStore('eventStore', {
       }
 
       // setup event, add to activeEvents
-      const uid = crypto.randomUUID();
+      const uid = window.crypto.randomUUID();
       const sendDate = useGameStore().currentDay;
       try {
         console.log('randomEvent', randomEvent);
