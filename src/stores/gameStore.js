@@ -16,7 +16,7 @@ export const useGameStore = defineStore('gameStore', {
   actions: {
     startNewGame() {
       // console.log('startNewGame');
-      this.turn = 0;
+      this.turn = 1;
       this.isGameOver = false;
       usePlayerStore().resetState();
       useEventStore().initializeEvents();
