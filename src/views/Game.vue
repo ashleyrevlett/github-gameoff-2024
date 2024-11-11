@@ -24,7 +24,7 @@
   </main>
   <main v-else>
     <p>Game Over</p>
-    <router-link to="/" class="btn mt-2">New Game</router-link>
+    <button @click="newGame" class="btn mt-2">New Game</button>
   </main>
 </template>
 
@@ -53,5 +53,9 @@ onMounted(() => {
 
 function nextTurn() {
   gameStore.nextTurn();
+}
+
+function newGame() {
+  gameStore.startNewGame();
 }
 </script>
