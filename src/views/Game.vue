@@ -6,7 +6,7 @@
     </header>
     <section class="w-100 md:w-1/2">
       <DecisionEvent
-        v-if="activeEvents.length > 0"
+        v-if="activeEvents && activeEvents.length > 0"
         :event="activeEvents[0]"
         @nextTurn="nextTurn"
       />
@@ -14,9 +14,11 @@
         v-else-if="!agendaDecided"
       />
       <div v-else>
-        <p>The day is done.</p>
+        <h1 class="text-lg font-bold">The day is done.</h1>
         <p>Today's actions:</p>
-        <p v-for="event in eventStore.todaysEvents">{{ event }}</p>
+        <ul class="list-disc list-outside">
+          <li v-for="event in eventStore.todaysEvents" class="ml-4 text-sm my-1">{{ event }}</li>
+        </ul>
         <button class="btn mt-2" @click="nextTurn">Next Turn</button>
       </div>
     </section>

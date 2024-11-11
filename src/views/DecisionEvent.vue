@@ -7,37 +7,18 @@
     <div v-if="!event.resolution">
       <div class="choices flex flex-row gap-2">
         <button
-        v-for="choice in event.choices"
-        :key="choice.id"
-        @click="handleChoice(choice.id)"
-        class="btn btn-red m-1 w-1/2"
-        :disabled="choice.cost.ip > playerStore.influencePoints || choice.cost.money > playerStore.money"
-      >
-        <span>{{ choice.label }}</span>
-        <div
-          v-if="choice.cost.ip > 0 || choice.cost.money > 0"
-          class="text-xs gap-3"
+          v-for="choice in event.choices"
+          :key="choice.id"
+          @click="handleChoice(choice.id)"
+          class="btn btn-red m-1 w-1/2"
         >
-          (Cost:
-          <span class="mr-1 inline-block" v-if="choice.cost.ip > 0">{{ choice.cost.ip }} IP</span>
-          <span class="ml-1 inline-block" v-if="choice.cost.money > 0">${{ choice.cost.money.toLocaleString() }}</span>
-          )
-        </div>
-      </button>
-    </div>
-        <div class="my-4">
-        <p v-if="event.expiresIn >= 0" class="font-bold text-red-500 text-sm">Response due within {{ event.expiresIn }} days</p>
-        <p v-if="event.expiresIn === 0 && event.type === 'message'" class="font-bold text-red-500 text-sm">Response due today!</p>
+          <span>{{ choice.description }}</span>
+        </button>
       </div>
     </div>
     <div v-else>
       <Modal @dismissModal="dismissMessage">
-        <div class="p-4 my-4"
-          :class="{
-            'bg-green-100 border-green-500 border-2': event.resolution.effect === 'positive',
-            'bg-red-100 border-red-500 border-2': event.resolution.effect === 'negative'
-          }"
-        >
+        <div class="p-4 my-4">
           <p>{{ event.resolution.message }}</p>
           <div v-if="effectDescription" class="mt-1 font-bold text-sm capitalize">{{ effectDescription}}</div>
         </div>
@@ -74,10 +55,10 @@ const event = computed(() => props.event);
 const emit = defineEmits(['dismiss', 'nextTurn']);
 
 // get a description of the outcome of the event
-// format ex: 'Influence Points: +10, Money: -500'
+// format ex: 'Faith: +10, Money: -500'
 const effectDescription = computed(() => {
   if (event.value.resolution) {
-    const effectedStats = Object.entries(event.value.resolution).filter(([key, value]) => key !== 'effect' && key !== 'message' && value !== 0);
+    const effectedStats = Object.entries(event.value.resolution.outcome).filter(([key, value]) => value !== 0);
     return effectedStats.map(([key, value]) => {
       return key + ': ' + (value.toString().startsWith('-') ? '' : '+') + value;
     }).join(', ');

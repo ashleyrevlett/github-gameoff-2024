@@ -2,7 +2,6 @@
 import { defineStore } from 'pinia';
 import { usePlayerStore } from './playerStore';
 import { useEventStore } from './eventStore';
-import { useCharacterStore } from './characterStore';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -26,19 +25,19 @@ export const useGameStore = defineStore('gameStore', {
 
     checkWinLose() {
       const playerStore = usePlayerStore();
-      if (playerStore.fame >= 100 && playerStore.stress <= 100) {
+      if (playerStore.charisma >= 100 && playerStore.scrutiny <= 100) {
         this.isGameOver = true;
         this.gameOverMessage = 'The artist is a superstar! You win!';
         return;
       }
 
-      if (playerStore.stress >= 100) {
+      if (playerStore.scrutiny >= 100) {
         this.isGameOver = true;
         this.gameOverMessage = 'The artist burned out and quit.';
         return;
       }
 
-      if (this.turn >= this.maxTurns && playerStore.fame < 100) {
+      if (this.turn >= this.maxTurns && playerStore.charisma < 100) {
         this.isGameOver = true;
         this.gameOverMessage = 'Time\'s up! You failed to reach superstar status.';
         return;
@@ -55,7 +54,6 @@ export const useGameStore = defineStore('gameStore', {
       // reset resources and events
       useEventStore().nextTurn();
       usePlayerStore().nextTurn();
-      useCharacterStore().nextTurn();
 
       // advance the day
       this.turn++;

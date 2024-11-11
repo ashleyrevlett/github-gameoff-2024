@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import events from '../data/events.json'
 import { usePlayerStore } from './playerStore';
 import { useGameStore } from './gameStore';
-import { useCharacterStore } from './characterStore';
 import { useNotificationStore } from './notificationStore';
 
 export const useEventStore = defineStore('eventStore', {
@@ -13,15 +12,11 @@ export const useEventStore = defineStore('eventStore', {
     agendaDecided: null,
   }),
 
-  getters: {
-    activeMessages: (state) => state.activeEvents.filter(e => e.type === 'message'),
-    activePhoneCalls: (state) => state.activeEvents.filter(e => e.type === 'phone_call'),
-  },
-
   actions: {
     initializeEvents() {
       this.eventPool = events; // Load events from events.json into eventPool
       this.todaysEvents = [];
+      this.activeEvents = [];
       this.agendaDecided = false;
       this.nextTurn(); // begin the first turn
     },
@@ -30,58 +25,34 @@ export const useEventStore = defineStore('eventStore', {
       this.activeEvents = this.activeEvents.filter(e => e.uid !== uid);
     },
 
-    handleExpiredEvents() {
-      // remove expired events, decrementing expiresIn
-      for (const event of this.activeEvents) {
-        event.expiresIn--;
-        if (event.expiresIn <= 0) {
-          // send notification
-          useNotificationStore().addNotification({
-            id: window.crypto.randomUUID(),
-            notificationType: 'eventExpired',
-            object: {...event},
-          });
-        }
-      }
-      // remove expired events
-      this.activeEvents = this.activeEvents.filter(e => e.expiresIn > 0);
-    },
-
     nextTurn() {
       console.log('refreshEvents');
 
-      this.handleExpiredEvents();
+      this.todaysEvents = [];
 
       // Randomly trigger 1-3 messages
       const numEvents = Math.floor(Math.random() * 2) + 1;
       for (let i = 0; i < numEvents; i++) {
-        this.triggerRandomEvent('message');
-      }
-
-      // X% of the time, trigger 1 phone call if not first turn
-      if (Math.random() < 0.8 && useGameStore().turn > 1) {
-        this.triggerRandomEvent('phone_call');
+        this.triggerRandomEvent();
       }
 
       // reset agendaDecided
       this.agendaDecided = false; //
     },
 
-    triggerRandomEvent(eventType='message') {
-
-      // conditions need fame, money, and stress to be defined
-      const fame = usePlayerStore().fame;
-      const money = usePlayerStore().money;
-      const stress = usePlayerStore().stress;
+    triggerRandomEvent() {
+      // conditions need charisma, money, and scrutiny to be defined
+      const charisma = usePlayerStore().charisma;
+      const faith = usePlayerStore().faith;
+      const scrutiny = usePlayerStore().scrutiny;
 
       const possibleEvents = this.eventPool.filter(e => {
-        // pass context to eval so it works in prod builds
-        const context = { fame, money, stress };
-        // const passesCondition = e.condition ? eval(`with (context) { ${e.condition} }`) : true;
+        // provide variable names so bundler doesn't mangle them in prod builds
+        const context = { charisma, faith, scrutiny };
         const passesCondition = e.condition
-          ? new Function('fame', 'money', 'stress', `return ${e.condition}`)(fame, money, stress)
+          ? new Function('charisma', 'faith', 'scrutiny', `return ${e.condition}`)(charisma, faith, scrutiny)
           : true;
-        return e.type === eventType && passesCondition;
+        return passesCondition;
       });
       if (!possibleEvents.length) {
         console.log('no possibleEvents', eventType);
@@ -97,21 +68,18 @@ export const useEventStore = defineStore('eventStore', {
       }
 
       // setup event, add to activeEvents
-      const uid = window.crypto.randomUUID();
       const sendDate = useGameStore().currentDay;
       try {
         console.log('randomEvent', randomEvent);
-        const potentialSenders = useCharacterStore().contacts.filter(c => c.category === randomEvent.category);
-        const randomSender = potentialSenders[Math.floor(Math.random() * potentialSenders.length)];
-        this.activeEvents.unshift({
+        console.log(this.activeEvents);
+        this.activeEvents.push({
           ...randomEvent,
-          uid: uid,
-          sender: randomSender,
+          uid: window.crypto.randomUUID(),
           resolution: null,
           sendDate: sendDate,
         });
       } catch (error) {
-        console.error('error getting potential senders', error, randomEvent.category);
+        console.error('error adding event', error);
       }
     },
 
@@ -131,16 +99,22 @@ export const useEventStore = defineStore('eventStore', {
       const playerStore = usePlayerStore();
 
       const choice = activeEvent.choices.find(c => c.id === choiceId);
-      if (playerStore.influencePoints < choice.cost.ip || playerStore.money < choice.cost.money) return;
+      if (choice?.outcome) {
+        const outcome = choice.outcome;
+        if (outcome.charisma) {
+          playerStore.modifyCharisma(outcome.charisma);
+        }
+        if (outcome.faith) {
+          playerStore.modifyFaith(outcome.faith);
+        }
+        if (outcome.scrutiny) {
+          playerStore.modifyScrutiny(outcome.scrutiny);
+        }
+        if (outcome.money) {
+          playerStore.modifyMoney(outcome.money);
+        }
 
-      // randomly select between positive and negative outcome; 90% likelihood of positive outcome
-      const positiveOutcome = Math.random() < 0.8;
-      const outcome = positiveOutcome ? choice.outcomes.find(o => o.effect === "positive") : choice.outcomes.find(o => o.effect === "negative");
-      if (outcome) {
-        playerStore.updateStats(outcome);
-        playerStore.modifyInfluencePoints(-choice.cost.ip);
-        playerStore.modifyMoney(-choice.cost.money);
-        activeEvent.resolution = outcome; // remember the outcome
+        activeEvent.resolution = choice; // remember the outcome
         this.logEvent(activeEvent, choice, outcome);
         useGameStore().checkWinLose();
         // message will be removed from activeEvents after user dismisses it
@@ -150,10 +124,9 @@ export const useEventStore = defineStore('eventStore', {
     },
 
     logEvent(event, choice, outcome) {
-      const statsChanged = Object.fromEntries(Object.entries(outcome).filter(([key, value]) => key !== 'message'));
-      const outcomeString = Object.entries(statsChanged).map(([key, value]) => `${key}: ${value}`).join(', ');
-      const eventLog = `${event.title} -- You chose: ${choice.label}. Outcome: ${outcome.message} Effect: ${outcomeString}`;
-      this.todaysEvents.unshift(eventLog);
+      const outcomeString = Object.entries(outcome).map(([key, value]) => `${key}: ${value}`).join(', ');
+      const eventLog = `${event.title} -- You chose: ${choice.title}. Outcome: ${choice.message} Effect: ${outcomeString}`;
+      this.todaysEvents.push(eventLog);
       console.log('eventLog', eventLog);
     },
 
@@ -166,23 +139,23 @@ export const useEventStore = defineStore('eventStore', {
       const playerStore = usePlayerStore();
       switch (agenda) {
         case 'worship':
-          playerStore.modifyFame(10);
-          result = 'Worshipped the God of the Church. Fame +10.';
+          playerStore.modifyCharisma(10);
+          result = 'Worshipped the God of the Church. charisma +10.';
           break;
         case 'recruit':
-          playerStore.modifyFame(5);
-          result = 'Recruited a new follower. Fame +5.';
+          playerStore.modifyCharisma(5);
+          result = 'Recruited a new follower. charisma +5.';
           break;
         case 'purge':
-          playerStore.modifyFame(-1);
-          result = 'Purged a heretic. Fame -1.';
+          playerStore.modifyCharisma(-1);
+          result = 'Purged a heretic. charisma -1.';
           break;
         case 'pray':
-          playerStore.modifyFame(5);
-          result = 'Prayed for guidance. Fame +5.';
+          playerStore.modifyCharisma(5);
+          result = 'Prayed for guidance. charisma +5.';
           break;
       }
-      this.todaysEvents.unshift(result);
+      this.todaysEvents.push(result);
       console.log('result', result);
       return result;
     },

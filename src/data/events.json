@@ -1,498 +1,152 @@
 [
   {
-    "id": "local_gig",
-    "type": "message",
-    "category": "Promoter",
-    "title": "Offer for a Local Gig",
-    "description": "A well-known club in your hometown has offered your star a chance to perform for a small crowd. This could be a good way to earn some extra cash and build a local following.",
-    "expiresIn": 2,
-    "condition": "fame < 30",
+    "id": "first-vision",
+    "title": "The First Vision",
+    "description": "Xenu speaks. His words burn your mind. You must declare what you’ve seen.",
     "choices": [
       {
-        "id": "accept_gig",
-        "label": "Accept the Local Gig",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "money": 100,
-            "fame": 5,
-            "stress": -2,
-            "message": "The show was a hit! Fans loved the intimate setting, and the money helps too."
-          },
-          {
-            "effect": "negative",
-            "money": 100,
-            "fame": -3,
-            "stress": 10,
-            "message": "The gig went poorly with technical issues, and fans seemed unimpressed. The stress really got to your star."
-          }
-        ],
-        "cost": {
-          "ip": 5,
-          "money": 0
-        }
+        "id": "proclaim-xenu",
+        "title": "Proclaim Xenu",
+        "outcome": {
+          "faith": 30
+        },
+        "description": "You shout Xenu’s name. Your followers quake. They await your word.",
+        "message": "The crowd erupts, their faith now a flame. You stand as the divine vessel, stronger than ever before. They are yours to lead.",
+        "beliefs_supported": "xenu-alone-is-the-true-god",
+        "beliefs_opposed": null
       },
       {
-        "id": "decline_gig",
-        "label": "Decline the Offer",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 0,
-            "stress": -3,
-            "message": "Declining the gig kept your star well-rested, with minimal impact on fame."
-          },
-          {
-            "effect": "negative",
-            "fame": -2,
-            "stress": 2,
-            "message": "Fans were disappointed by the decline, seeing it as a missed opportunity."
-          }
-        ],
-        "cost": {
-          "ip": 0,
-          "money": 0
-        }
+        "id": "speak-in-riddles",
+        "title": "Speak in Riddles",
+        "outcome": {
+          "scrutiny": 15
+        },
+        "description": "You speak in riddles. Their eyes widen. The authorities listen.",
+        "message": "The whispers of your cryptic words grow. Some are shaken, some intrigued. Yet, eyes from outside grow sharper, and the pressure mounts.",
+        "beliefs_supported": "reject-the-illusion-of-earth",
+        "beliefs_opposed": null
       }
-    ]
+    ],
+    "condition": "faith >= 0"
   },
   {
-    "id": "festival_performance",
-    "type": "message",
-    "category": "Promoter",
-    "title": "Offer to Perform at a Music Festival",
-    "description": "A big regional music festival has invited your star to perform as an opening act. It's a huge opportunity for exposure and money, but the demands are high.",
-    "expiresIn": 3,
-    "condition": "fame >= 20 && money >= 500",
+    "id": "silence-ritual",
+    "title": "The Silence Ritual",
+    "description": "The silence is the test. You must choose how long they stay silent.",
     "choices": [
       {
-        "id": "book_festival",
-        "label": "Book the Festival Performance",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "money": 1000,
-            "fame": 20,
-            "stress": 5,
-            "message": "The festival performance was a success! New fans and big earnings came rolling in, boosting your star's fame significantly."
-          },
-          {
-            "effect": "negative",
-            "money": 500,
-            "fame": 5,
-            "stress": 20,
-            "message": "Bad weather and sound issues made the festival a stressful experience with mixed reviews. Your star's stress shot up."
-          }
-        ],
-        "cost": {
-          "ip": 15,
-          "money": 500
-        }
+        "id": "silence-7-days",
+        "title": "Silence for 7 Days",
+        "outcome": {
+          "faith": 15
+        },
+        "description": "Seven days. The followers endure. The silence stretches.",
+        "message": "They submit. The days drag on, but the followers are changed. They feel your power, and their faith becomes unshakable.",
+        "beliefs_supported": "oza-speaks-for-xenu",
+        "beliefs_opposed": null
       },
       {
-        "id": "pass_on_festival",
-        "label": "Pass on the Festival",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": -2,
-            "stress": -5,
-            "message": "Skipping the festival helped avoid a potentially risky situation. Fame took a minor hit, but stress levels stayed low."
-          },
-          {
-            "effect": "negative",
-            "fame": -8,
-            "stress": 5,
-            "message": "The festival was a big hit without your star, leaving fans disappointed and fame significantly hurt."
-          }
-        ],
-        "cost": {
-          "ip": 0,
-          "money": 0
-        }
+        "id": "silence-30-days",
+        "title": "Silence for 30 Days",
+        "outcome": {
+          "scrutiny": 20
+        },
+        "description": "Thirty days. The silence is endless. The authorities stare.",
+        "message": "The silence wears on. It breaks them. Your followers grow restless, and the government notices. Their eyes are now upon you.",
+        "beliefs_supported": "endure-suffering-to-prove-faith",
+        "beliefs_opposed": null
       }
-    ]
+    ],
+    "condition": "charisma >= 10"
   },
   {
-    "id": "tv_special",
-    "type": "message",
-    "category": "Media Outlet",
-    "title": "Prime-Time TV Special",
-    "description": "A popular TV network is offering a paid prime-time slot for your star to perform live. This could be a massive payday, but also a high-stress opportunity that requires careful planning.",
-    "condition": "fame >= 50 && money >= 1000",
+    "id": "mind-sacrifice",
+    "title": "The Sacrifice of the Mind",
+    "description": "They must give their minds to ascend. Who will go first?",
     "choices": [
       {
-        "id": "book_tv_show",
-        "label": "Book the TV Special",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "money": 2000,
-            "fame": 20,
-            "stress": 15,
-            "message": "The TV performance was flawless! Ratings soared, fans were thrilled, and fame shot up."
-          },
-          {
-            "effect": "negative",
-            "money": 1000,
-            "fame": 8,
-            "stress": 25,
-            "message": "Technical issues plagued the performance, making it a challenging night with mixed reviews. The stress was overwhelming."
-          }
-        ],
-        "cost": {
-          "ip": 25,
-          "money": 1000
-        }
+        "id": "sacrifice-weakest",
+        "title": "Sacrifice the Weakest",
+        "outcome": {
+          "faith": 25
+        },
+        "description": "The weakest give all. The strong are stirred. The choice is made.",
+        "message": "They follow. The weak fall, their minds sacrificed. But the rest are emboldened, stronger in their belief. Your following grows.",
+        "beliefs_supported": "reject-the-illusion-of-earth",
+        "beliefs_opposed": null
       },
       {
-        "id": "decline_tv_show",
-        "label": "Decline the TV Special",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": -5,
-            "stress": -8,
-            "message": "Declining the appearance preserved your star's energy, with only a minor impact on fame."
-          },
-          {
-            "effect": "negative",
-            "fame": -1,
-            "stress": 10,
-            "message": "Fans and industry insiders were disappointed by the no-show."
-          }
-        ],
-        "cost": {
-          "ip": 0,
-          "money": 0
-        }
+        "id": "sacrifice-all",
+        "title": "Sacrifice All",
+        "outcome": {
+          "scrutiny": 25
+        },
+        "description": "All must give. The sacrifice will be total.",
+        "message": "All submit. The act is complete, but the world takes notice. The authorities tighten their gaze, and whispers of madness grow louder.",
+        "beliefs_supported": "the-body-is-a-vessel",
+        "beliefs_opposed": null
       }
-    ]
+    ],
+    "condition": "faith > 30"
   },
   {
-    "id": "charity_event",
-    "type": "message",
-    "category": "Non-profit",
-    "title": "Charity Event Invitation",
-    "description": "Your star is invited to a high-profile charity event. Should they attend?",
-    "expiresIn": 2,
-    "condition": "fame >= 40 && stress <= 50",
+    "id": "flock-gathering",
+    "title": "The Gathering of the Flock",
+    "description": "They come. The gathering. It is time to speak.",
     "choices": [
       {
-        "id": "attend",
-        "label": "Attend the event",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 8,
-            "stress": 5,
-            "message": "The charity event was a success! Fans admired your star's generosity, and fame increased noticeably."
-          },
-          {
-            "effect": "negative",
-            "fame": 0,
-            "stress": 10,
-            "message": "The event didn't go as planned, with few fans noticing and media unimpressed. The experience was unexpectedly stressful."
-          }
-        ],
-        "cost": {
-          "ip": 5,
-          "money": 200
-        }
+        "id": "declare-right",
+        "title": "Declare Your Right",
+        "outcome": {
+          "charisma": 15
+        },
+        "description": "You stand tall. Your words strike. They are yours.",
+        "message": "The crowd roars. Your power is undeniable. They see you as their leader, and you stand as their sole path to salvation.",
+        "beliefs_supported": "oza-speaks-for-xenu",
+        "beliefs_opposed": null
       },
       {
-        "id": "decline",
-        "label": "Politely decline",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 0,
-            "stress": 0,
-            "message": "Declining had little effect, and your star avoided extra stress."
-          },
-          {
-            "effect": "negative",
-            "fame": -8,
-            "stress": 5,
-            "message": "The decline disappointed fans who expected charity involvement, hurting fame more than expected."
-          }
-        ],
-        "cost": {
-          "ip": 0,
-          "money": 0
-        }
+        "id": "proclaim-doomsday",
+        "title": "Proclaim Doomsday",
+        "outcome": {
+          "faith": 20
+        },
+        "description": "You tell them of the end. They kneel. Your word is gospel.",
+        "message": "They kneel before you, their faith unbreakable. The comet grows closer in their hearts, and the vision of doomsday becomes their singular truth.",
+        "beliefs_supported": "ascend-on-doomsday",
+        "beliefs_opposed": null
       }
-    ]
+    ],
+    "condition": "charisma >= 20"
   },
   {
-    "id": "tabloid_scandal",
-    "type": "phone_call",
-    "category": "Media Outlet",
-    "title": "Tabloid Scandal",
-    "description": "A tabloid has a story on your star's wild party. They're giving you a chance to respond before it goes live.",
-    "condition": "fame >= 40",
+    "id": "astral-invocation",
+    "title": "The Astral Invocation",
+    "description": "You reach into the void. Xenu waits. Will you call him?",
     "choices": [
       {
-        "id": "deny",
-        "label": "Deny the Story",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 10,
-            "stress": 2,
-            "message": "The denial was successful, and the story died down quickly, with a slight boost to fame."
-          },
-          {
-            "effect": "negative",
-            "fame": -10,
-            "stress": 15,
-            "message": "The denial backfired, as more 'sources' confirmed the story, damaging fame further and causing a lot of stress."
-          }
-        ],
-        "cost": {
-          "ip": 10,
-          "money": 0
-        }
+        "id": "summon-xenu",
+        "title": "Summon Xenu",
+        "outcome": {
+          "faith": 10
+        },
+        "description": "You demand his presence. You call out. The silence responds.",
+        "message": "Xenu’s presence fills the air. Your followers are shaken but inspired. Your faith in his power is now known.",
+        "beliefs_supported": "xenu-alone-is-the-true-god",
+        "beliefs_opposed": null
       },
       {
-        "id": "ignore",
-        "label": "Ignore it",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 0,
-            "stress": -5,
-            "message": "Ignoring it worked out, and the story lost traction quickly."
-          },
-          {
-            "effect": "negative",
-            "fame": -8,
-            "stress": 15,
-            "message": "Ignoring the story led to rumors spiraling, hurting fame and adding significant stress."
-          }
-        ],
-        "cost": {
-          "ip": 0,
-          "money": 0
-        }
+        "id": "invoke-xenu-silently",
+        "title": "Invoke Xenu in Silence",
+        "outcome": {
+          "scrutiny": 25
+        },
+        "description": "You wait. Silent. The void answers, but so do the watchers.",
+        "message": "The silence is broken. The authorities move in. They watch with suspicion. The ritual continues, but at a price.",
+        "beliefs_supported": "the-doomsday-clock-is-sacred",
+        "beliefs_opposed": null
       }
-    ]
-  },
-
-  {
-    "id": "secret_relationship",
-    "type": "phone_call",
-    "category": "Media Outlet",
-    "condition": "fame > 30",
-    "title": "Secret Relationship Leaked",
-    "description": "The press has uncovered your star's secret relationship with a controversial figure. You need to respond quickly!",
-    "choices": [
-      {
-        "id": "confirm",
-        "label": "Confirm the Relationship",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 15,
-            "stress": -10,
-            "message": "The public loves it! Fame has surged, and your star is relieved to have the truth out in the open."
-          },
-          {
-            "effect": "negative",
-            "fame": -5,
-            "stress": 20,
-            "message": "Fans were shocked and disappointed by the revelation, causing a dip in fame and a big increase in stress."
-          }
-        ],
-        "cost": {
-          "ip": 15,
-          "money": 0
-        }
-      },
-      {
-        "id": "deny",
-        "label": "Deny the Rumor",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 5,
-            "stress": 5,
-            "message": "The denial worked, and fans seem satisfied with the response."
-          },
-          {
-            "effect": "negative",
-            "fame": -10,
-            "stress": 15,
-            "message": "The denial didn't convince anyone, leading to stress and negative publicity."
-          }
-        ],
-        "cost": {
-          "ip": 10,
-          "money": 0
-        }
-      }
-    ]
-  },
-  {
-    "id": "backstage_tantrum",
-    "type": "phone_call",
-    "category": "Media Outlet",
-    "condition": "fame > 40",
-    "title": "Backstage Tantrum Reported",
-    "description": "Rumors are circulating about your star having a tantrum backstage at a recent show. The press is asking for a response.",
-    "choices": [
-      {
-        "id": "apologize",
-        "label": "Issue an Apology",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 8,
-            "stress": 5,
-            "message": "Fans appreciated the apology, and fame has taken only a minor hit."
-          },
-          {
-            "effect": "negative",
-            "fame": -10,
-            "stress": 15,
-            "message": "The apology seemed insincere, leading to negative backlash and increased stress."
-          }
-        ],
-        "cost": {
-          "ip": 5,
-          "money": 200
-        }
-      },
-      {
-        "id": "deny",
-        "label": "Deny the Incident",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 3,
-            "stress": 5,
-            "message": "The denial worked well enough, with only minor stress added."
-          },
-          {
-            "effect": "negative",
-            "fame": -15,
-            "stress": 20,
-            "message": "The denial backfired as more witnesses came forward, resulting in a major hit to fame and a surge in stress."
-          }
-        ],
-        "cost": {
-          "ip": 10,
-          "money": 0
-        }
-      }
-    ]
-  },
-  {
-    "id": "lip_sync_scandal",
-    "type": "phone_call",
-    "category": "Media Outlet",
-    "condition": "fame > 50",
-    "title": "Lip-Syncing Scandal",
-    "description": "The press has caught wind that your star may have lip-synced at a recent live performance. They're demanding a statement.",
-    "choices": [
-      {
-        "id": "admit",
-        "label": "Admit to Lip-Syncing",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": -5,
-            "stress": 10,
-            "message": "Fans appreciated the honesty, though fame took a small hit."
-          },
-          {
-            "effect": "negative",
-            "fame": -15,
-            "stress": 15,
-            "message": "Admitting to lip-syncing led to backlash and a loss in fame and credibility."
-          }
-        ],
-        "cost": {
-          "ip": 5,
-          "money": 0
-        }
-      },
-      {
-        "id": "deny",
-        "label": "Deny the Accusation",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 5,
-            "stress": 5,
-            "message": "The denial was effective, and fans were convinced."
-          },
-          {
-            "effect": "negative",
-            "fame": -10,
-            "stress": 15,
-            "message": "Fans weren't convinced, leading to backlash and a hit to fame."
-          }
-        ],
-        "cost": {
-          "ip": 10,
-          "money": 0
-        }
-      }
-    ]
-  },
-  {
-    "id": "rival_feud",
-    "type": "phone_call",
-    "category": "Media Outlet",
-    "condition": "fame > 60",
-    "title": "Feud with a Rival Star",
-    "description": "A rival pop star has accused your star of stealing their song idea, and the press is all over it. How do you respond?",
-    "choices": [
-      {
-        "id": "deny",
-        "label": "Deny the Accusation",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 8,
-            "stress": 10,
-            "message": "The denial worked, and fans are siding with your star."
-          },
-          {
-            "effect": "negative",
-            "fame": -12,
-            "stress": 20,
-            "message": "Fans weren't convinced, leading to a hit in fame and added stress from the backlash."
-          }
-        ],
-        "cost": {
-          "ip": 10,
-          "money": 0
-        }
-      },
-      {
-        "id": "embrace",
-        "label": "Embrace the Feud",
-        "outcomes": [
-          {
-            "effect": "positive",
-            "fame": 15,
-            "stress": 10,
-            "message": "The feud has fueled fan interest, and fame has spiked thanks to the publicity!"
-          },
-          {
-            "effect": "negative",
-            "fame": -5,
-            "stress": 25,
-            "message": "The feud turned ugly, with fans feeling disillusioned. Fame took a hit, and stress surged."
-          }
-        ],
-        "cost": {
-          "ip": 5,
-          "money": 0
-        }
-      }
-    ]
+    ],
+    "condition": "scrutiny < 50"
   }
 ]

@@ -4,9 +4,9 @@
     <p>Followers: {{ playerStore.followers }}</p>
   </div>
   <div class="p-4 border border-black mb-4">
-    <ProgressBar :percentage="playerStore.fame" label="Fame" color="green" />
-    <ProgressBar :percentage="playerStore.stress" label="Stress" color="red" />
-    <p class="mt-2 text-lg">Influence Points: {{ playerStore.influencePoints }}</p>
+    <ProgressBar :percentage="playerStore.charisma" label="charisma" color="green" />
+    <ProgressBar :percentage="playerStore.faith" label="faith" color="purple" />
+    <ProgressBar :percentage="playerStore.scrutiny" label="scrutiny" color="red" />
     <p class="text-lg">Money: ${{ playerStore.money.toLocaleString() }}</p>
   </div>
 </template>
