@@ -1,10 +1,10 @@
 <template>
-  <main v-if="!gameStore.isGameOver" class="p-4">
-    <header>
+  <main v-if="!gameStore.isGameOver" class="p-4 flex flex-col md:flex-row gap-4">
+    <header class="w-100 md:w-1/2" >
       <Stats />
       <NavBar />
     </header>
-    <section>
+    <section class="w-100 md:w-1/2">
       <DecisionEvent
         v-if="activeEvents.length > 0"
         :event="activeEvents[0]"
@@ -12,10 +12,11 @@
       />
       <DailyAgenda
         v-else-if="!agendaDecided"
-        @nextTurn="nextTurn"
       />
       <div v-else>
         <p>The day is done.</p>
+        <p>Today's actions:</p>
+        <p v-for="event in eventStore.todaysEvents">{{ event }}</p>
         <button class="btn mt-2" @click="nextTurn">Next Turn</button>
       </div>
     </section>
@@ -48,7 +49,6 @@ onMounted(() => {
 });
 
 function nextTurn() {
-  eventStore.setAgendaDecided(true);
   gameStore.nextTurn();
 }
 </script>

@@ -21,7 +21,6 @@ export const useGameStore = defineStore('gameStore', {
       usePlayerStore().resetState();
       useEventStore().initializeEvents();
       this.currentDay = new Date('1982-03-01');
-      // this.nextTurn();
     },
 
 
@@ -54,13 +53,16 @@ export const useGameStore = defineStore('gameStore', {
       }
 
       // reset resources and events
-      useEventStore().refreshEvents();
-      usePlayerStore().refreshResources();
-      useCharacterStore().refreshContacts();
+      useEventStore().nextTurn();
+      usePlayerStore().nextTurn();
+      useCharacterStore().nextTurn();
 
       // advance the day
       this.turn++;
       this.currentDay.setDate(this.currentDay.getDate() + 1);
+
+      // see if we lost/won after the turn began
+      this.checkWinLose();
     },
   },
 });

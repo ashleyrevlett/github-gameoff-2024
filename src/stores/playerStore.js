@@ -41,7 +41,7 @@ export const usePlayerStore = defineStore('playerStore', {
       this.money = 1000;
       this.followers = 2;
     },
-    refreshResources() {
+    nextTurn() {
       this.influencePoints += 10;
       this.money += 100;
     },

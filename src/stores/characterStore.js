@@ -16,7 +16,7 @@ export const useCharacterStore = defineStore('characterStore', {
       this.contacts = this.characterPool.filter(c => c.influence <= 4);
     },
 
-    refreshContacts() {
+    nextTurn() {
       const influence = Math.max(4, Math.ceil(usePlayerStore().fame / 10));
       this.contacts = this.characterPool.filter(c => c.influence <= influence);
     },

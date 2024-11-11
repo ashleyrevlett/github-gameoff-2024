@@ -9,7 +9,7 @@ export const useEventStore = defineStore('eventStore', {
   state: () => ({
     activeEvents: [],  // messages and phone calls
     eventPool: [],
-    pastEvents: [],
+    todaysEvents: [],
     agendaDecided: null,
   }),
 
@@ -21,9 +21,9 @@ export const useEventStore = defineStore('eventStore', {
   actions: {
     initializeEvents() {
       this.eventPool = events; // Load events from events.json into eventPool
-      this.refreshEvents(); // populate activeEvents
-      this.pastEvents = [];
+      this.todaysEvents = [];
       this.agendaDecided = false;
+      this.nextTurn(); // begin the first turn
     },
 
     dismissMessage(uid) {
@@ -47,7 +47,7 @@ export const useEventStore = defineStore('eventStore', {
       this.activeEvents = this.activeEvents.filter(e => e.expiresIn > 0);
     },
 
-    refreshEvents() {
+    nextTurn() {
       console.log('refreshEvents');
 
       this.handleExpiredEvents();
@@ -63,7 +63,7 @@ export const useEventStore = defineStore('eventStore', {
         this.triggerRandomEvent('phone_call');
       }
 
-      // rest
+      // reset agendaDecided
       this.agendaDecided = false; //
     },
 
@@ -153,12 +153,38 @@ export const useEventStore = defineStore('eventStore', {
       const statsChanged = Object.fromEntries(Object.entries(outcome).filter(([key, value]) => key !== 'message'));
       const outcomeString = Object.entries(statsChanged).map(([key, value]) => `${key}: ${value}`).join(', ');
       const eventLog = `${event.title} -- You chose: ${choice.label}. Outcome: ${outcome.message} Effect: ${outcomeString}`;
-      this.pastEvents.unshift(eventLog);
+      this.todaysEvents.unshift(eventLog);
       console.log('eventLog', eventLog);
     },
 
     setAgendaDecided(value) {
       this.agendaDecided = value;
+    },
+
+    setAgenda(agenda) {
+      var result = '';
+      const playerStore = usePlayerStore();
+      switch (agenda) {
+        case 'worship':
+          playerStore.modifyFame(10);
+          result = 'Worshipped the God of the Church. Fame +10.';
+          break;
+        case 'recruit':
+          playerStore.modifyFame(5);
+          result = 'Recruited a new follower. Fame +5.';
+          break;
+        case 'purge':
+          playerStore.modifyFame(-1);
+          result = 'Purged a heretic. Fame -1.';
+          break;
+        case 'pray':
+          playerStore.modifyFame(5);
+          result = 'Prayed for guidance. Fame +5.';
+          break;
+      }
+      this.todaysEvents.unshift(result);
+      console.log('result', result);
+      return result;
     },
   },
 });
