@@ -1,15 +1,9 @@
+
 <template>
   <div
-    class="border border-black p-4 z-10 bg-white absolute transition-all duration-300 w-full"
-    :style="{ left: offset + 'px', top: offset + 'px' }"
-    :class="{
-      'min-h-[50vh]': event.type === 'message',
-      'border-red-500': event.expiresIn === 0 && event.type === 'message',
-      'z-30': isActive
-     }">
+    v-if="event"
+    class="border border-black p-4 z-10 bg-white transition-all duration-300 w-full">
     <h2 class="text-lg font-bold">{{ event.title }}</h2>
-    <h3 class="font-bold">From: {{ event.sender.name }}, {{ event.sender.organization }}</h3>
-    <p v-if="event.type === 'message'" class="mb-3">{{ event.sendDate.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' }) }}</p>
     <p class="mb-3">{{ event.description }}</p>
     <div
       v-if="!event.resolution"
@@ -53,6 +47,10 @@
     </div>
 
   </div>
+  <div v-else>
+    <p>No active events</p>
+    <button class="btn mt-2" @click="emit('nextTurn')">Next Turn</button>
+  </div>
 </template>
 
 <script setup>
@@ -63,19 +61,14 @@ import { usePlayerStore } from '../stores/playerStore';
 const eventStore = useEventStore();
 const playerStore = usePlayerStore();
 
-const props = defineProps({
-  event: Object,
-  isActive: Boolean,
-  index: Number
-});
 
-const emit = defineEmits(['dismiss']);
+const event = computed(() => eventStore.activeEvents.length > 0 ? eventStore.activeEvents[0] : null);
 
-const offset = computed(() => props.index * 10);
+const emit = defineEmits(['dismiss', 'nextTurn']);
 
 const effect = computed(() => {
-  if (props.event.resolution) {
-    const effectedStats = Object.entries(props.event.resolution).filter(([key, value]) => key !== 'effect' && key !== 'message' && value !== 0);
+  if (event.value.resolution) {
+    const effectedStats = Object.entries(event.value.resolution).filter(([key, value]) => key !== 'effect' && key !== 'message' && value !== 0);
     return effectedStats.map(([key, value]) => {
       return key + ': ' + (value.toString().startsWith('-') ? '' : '+') + value;
     }).join(', ');
@@ -83,12 +76,12 @@ const effect = computed(() => {
   return null;
 });
 
-
 function handleChoice(choiceId) {
-  eventStore.resolveEvent(props.event.uid, choiceId);
+  console.log('handleChoice', choiceId);
+  eventStore.resolveEvent(event.value.uid, choiceId);
 }
 
 function dismissMessage() {
-  eventStore.dismissMessage(props.event.uid);
+  eventStore.dismissMessage(event.value.uid);
 }
 </script>

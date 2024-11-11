@@ -118,6 +118,8 @@ export const useEventStore = defineStore('eventStore', {
       @return outcome
       */
 
+      console.log('resolveEvent', eventUid, choiceId);
+
      const activeEvent = this.activeEvents.find(e => e.uid === eventUid);
       if (!activeEvent) return;
 

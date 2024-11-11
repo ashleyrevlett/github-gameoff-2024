@@ -7,6 +7,7 @@ export const usePlayerStore = defineStore('playerStore', {
     stress: 0,
     influencePoints: 10,
     money: 1000,
+    followers: 2,
   }),
 
   actions: {
@@ -38,6 +39,7 @@ export const usePlayerStore = defineStore('playerStore', {
       this.stress = 0;
       this.influencePoints = 10;
       this.money = 1000;
+      this.followers = 2;
     },
     refreshResources() {
       this.influencePoints += 10;
