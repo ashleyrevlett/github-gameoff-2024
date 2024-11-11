@@ -10,6 +10,7 @@ export const useEventStore = defineStore('eventStore', {
     activeEvents: [],  // messages and phone calls
     eventPool: [],
     pastEvents: [],
+    agendaDecided: null,
   }),
 
   getters: {
@@ -22,6 +23,7 @@ export const useEventStore = defineStore('eventStore', {
       this.eventPool = events; // Load events from events.json into eventPool
       this.refreshEvents(); // populate activeEvents
       this.pastEvents = [];
+      this.agendaDecided = false;
     },
 
     dismissMessage(uid) {
@@ -60,6 +62,9 @@ export const useEventStore = defineStore('eventStore', {
       if (Math.random() < 0.8 && useGameStore().turn > 1) {
         this.triggerRandomEvent('phone_call');
       }
+
+      // rest
+      this.agendaDecided = false; //
     },
 
     triggerRandomEvent(eventType='message') {
@@ -138,6 +143,7 @@ export const useEventStore = defineStore('eventStore', {
         activeEvent.resolution = outcome; // remember the outcome
         this.logEvent(activeEvent, choice, outcome);
         useGameStore().checkWinLose();
+        // message will be removed from activeEvents after user dismisses it
       } else {
         console.error('no outcome for choice', choice, eventUid);
       }
@@ -149,6 +155,10 @@ export const useEventStore = defineStore('eventStore', {
       const eventLog = `${event.title} -- You chose: ${choice.label}. Outcome: ${outcome.message} Effect: ${outcomeString}`;
       this.pastEvents.unshift(eventLog);
       console.log('eventLog', eventLog);
-    }
+    },
+
+    setAgendaDecided(value) {
+      this.agendaDecided = value;
+    },
   },
 });

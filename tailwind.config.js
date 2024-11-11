@@ -5,7 +5,8 @@ export default {
     'font-bold',
     'text-lg',
     'bg-green-500',
-    'bg-red-500'
+    'bg-red-500',
+    'router-link-active'
   ],
   theme: {
     extend: {},
