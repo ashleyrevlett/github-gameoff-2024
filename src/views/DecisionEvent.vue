@@ -52,16 +52,17 @@ const props = defineProps({
 
 const event = computed(() => props.event);
 
-const emit = defineEmits(['dismiss', 'nextTurn']);
+const emit = defineEmits(['dismiss']);
 
 // get a description of the outcome of the event
 // format ex: 'Faith: +10, Money: -500'
 const effectDescription = computed(() => {
   if (event.value.resolution) {
     const effectedStats = Object.entries(event.value.resolution.outcome).filter(([key, value]) => value !== 0);
-    return effectedStats.map(([key, value]) => {
+    let description = effectedStats.map(([key, value]) => {
       return key + ': ' + (value.toString().startsWith('-') ? '' : '+') + value;
     }).join(', ');
+    return description;
   }
   return null;
 });

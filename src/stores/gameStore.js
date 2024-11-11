@@ -9,12 +9,18 @@ export const useGameStore = defineStore('gameStore', {
     maxTurns: 30,
     currentDay: new Date('1982-03-01'),
     isGameOver: false,
+    isGameStarted: false,
     gameOverMessage: null,
   }),
 
   actions: {
     startNewGame() {
       // console.log('startNewGame');
+      if (this.isGameStarted) {
+        return;
+      }
+
+      this.isGameStarted = true;
       this.turn = 1;
       this.isGameOver = false;
       usePlayerStore().resetState();

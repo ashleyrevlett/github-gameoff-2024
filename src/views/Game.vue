@@ -6,9 +6,8 @@
     </header>
     <section class="w-100 md:w-1/2">
       <DecisionEvent
-        v-if="activeEvents && activeEvents.length > 0"
-        :event="activeEvents[0]"
-        @nextTurn="nextTurn"
+        v-if="events && events.length > 0"
+        :event="events[0]"
       />
       <DailyAgenda
         v-else-if="!agendaDecided"
@@ -43,11 +42,13 @@ import NavBar from '../components/NavBar.vue';
 const gameStore = useGameStore();
 const eventStore = useEventStore();
 
-const activeEvents = computed(() => eventStore.activeEvents);
+const events = computed(() => eventStore.events);
 const agendaDecided = computed(() => eventStore.agendaDecided);
 
 onMounted(() => {
-  gameStore.startNewGame();
+  if (!gameStore.isGameStarted) {
+    gameStore.startNewGame();
+  }
 });
 
 function nextTurn() {

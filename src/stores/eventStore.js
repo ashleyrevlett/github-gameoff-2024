@@ -1,28 +1,33 @@
 import { defineStore } from 'pinia';
-import events from '../data/events.json'
+import events from '../data/events.json';
+import beliefs from '../data/beliefs.json';
 import { usePlayerStore } from './playerStore';
 import { useGameStore } from './gameStore';
 import { useNotificationStore } from './notificationStore';
 
 export const useEventStore = defineStore('eventStore', {
   state: () => ({
-    activeEvents: [],  // messages and phone calls
+    events: [],  // messages and phone calls
     eventPool: [],
     todaysEvents: [],
     agendaDecided: null,
+    beliefs: [],
+    beliefPool: [],
   }),
 
   actions: {
     initializeEvents() {
       this.eventPool = events; // Load events from events.json into eventPool
+      this.beliefPool = beliefs; // Load beliefs from beliefs.json into beliefs
       this.todaysEvents = [];
-      this.activeEvents = [];
+      this.events = [];
+      this.beliefs = [];
       this.agendaDecided = false;
       this.nextTurn(); // begin the first turn
     },
 
     dismissMessage(uid) {
-      this.activeEvents = this.activeEvents.filter(e => e.uid !== uid);
+      this.events = this.events.filter(e => e.uid !== uid);
     },
 
     nextTurn() {
@@ -67,12 +72,12 @@ export const useEventStore = defineStore('eventStore', {
         return;
       }
 
-      // setup event, add to activeEvents
+      // setup event, add to events
       const sendDate = useGameStore().currentDay;
       try {
         console.log('randomEvent', randomEvent);
-        console.log(this.activeEvents);
-        this.activeEvents.push({
+        console.log(this.events);
+        this.events.push({
           ...randomEvent,
           uid: window.crypto.randomUUID(),
           resolution: null,
@@ -90,41 +95,62 @@ export const useEventStore = defineStore('eventStore', {
       Log the event to the pastEvents array.
       @return outcome
       */
-
       console.log('resolveEvent', eventUid, choiceId);
-
-     const activeEvent = this.activeEvents.find(e => e.uid === eventUid);
-      if (!activeEvent) return;
-
       const playerStore = usePlayerStore();
 
+      const activeEvent = this.events.find(e => e.uid === eventUid);
+      if (!activeEvent) {
+        console.error('no activeEvent', eventUid);
+        return;
+      }
+
       const choice = activeEvent.choices.find(c => c.id === choiceId);
-      if (choice?.outcome) {
-        const outcome = choice.outcome;
-        if (outcome.charisma) {
-          playerStore.modifyCharisma(outcome.charisma);
-        }
-        if (outcome.faith) {
-          playerStore.modifyFaith(outcome.faith);
-        }
-        if (outcome.scrutiny) {
-          playerStore.modifyScrutiny(outcome.scrutiny);
-        }
-        if (outcome.money) {
-          playerStore.modifyMoney(outcome.money);
+      if (!choice || !choice.outcome) {
+        console.error('no choice or no outcome', choiceId, choice);
+        return;
+      }
+
+      // do we hold supporting beliefs?
+      const outcome = choice.outcome;
+      let beliefMultiplier = 1;
+      if (choice.beliefs_supported) {
+        const belief = this.beliefPool.find(b => b.id === choice.beliefs_supported);
+        if (!belief) {
+          console.error('no belief', choice.beliefs_supported);
+          return;
         }
 
-        activeEvent.resolution = choice; // remember the outcome
-        this.logEvent(activeEvent, choice, outcome);
-        useGameStore().checkWinLose();
-        // message will be removed from activeEvents after user dismisses it
-      } else {
-        console.error('no outcome for choice', choice, eventUid);
+        if (this.beliefs.includes(belief)) {
+          console.log('belief already held', belief.title);
+          beliefMultiplier = 2;
+        } else {
+          console.log('new belief', belief.title);
+          this.beliefs.push(belief); // get a new belief
+          outcome.belief = belief.title;
+        }
       }
+
+      if (outcome.charisma) {
+        playerStore.modifyCharisma(outcome.charisma * beliefMultiplier);
+      }
+      if (outcome.faith) {
+        playerStore.modifyFaith(outcome.faith * beliefMultiplier);
+      }
+      if (outcome.scrutiny) {
+        playerStore.modifyScrutiny(outcome.scrutiny);
+      }
+      if (outcome.money) {
+        playerStore.modifyMoney(outcome.money);
+      }
+
+      activeEvent.resolution = choice; // remember the outcome
+      this.logEvent(activeEvent, choice, outcome);
+      useGameStore().checkWinLose();
+      // message will be removed from events after user dismisses it
     },
 
     logEvent(event, choice, outcome) {
-      const outcomeString = Object.entries(outcome).map(([key, value]) => `${key}: ${value}`).join(', ');
+      var outcomeString = Object.entries(outcome).map(([key, value]) => `${key}: ${value}`).join(', ');
       const eventLog = `${event.title} -- You chose: ${choice.title}. Outcome: ${choice.message} Effect: ${outcomeString}`;
       this.todaysEvents.push(eventLog);
       console.log('eventLog', eventLog);
