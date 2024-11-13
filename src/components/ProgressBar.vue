@@ -5,9 +5,12 @@
     </div>
     <div class="flex-grow w-100 h-3 bg-white border border-black rounded-full overflow-hidden">
       <div
-        class="h-full rounded-full transition-width duration-300 ease-in-out"
+        class="h-full rounded-full transition-width"
         :class="`bg-${color}-500`"
-        :style="{ width: `${percentage}%` }"
+        :style="{
+          width: `${percentage}%`,
+          transitionDuration: `${duration}ms`
+        }"
       ></div>
     </div>
   </div>
@@ -28,6 +31,10 @@ export default {
     color: {
       type: String,
       default: 'green'
+    },
+    duration: {
+      type: Number,
+      default: 300
     }
   }
 }

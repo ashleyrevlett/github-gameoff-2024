@@ -39,7 +39,7 @@ export const useEventStore = defineStore('eventStore', {
       this.todaysEvents = [];
 
       // Randomly trigger 1-3 messages
-      const numEvents = Math.floor(Math.random() * 2) + 1;
+      const numEvents = Math.floor(Math.random() * 2) + 4;
       for (let i = 0; i < numEvents; i++) {
         this.triggerRandomEvent();
       }
@@ -187,14 +187,14 @@ export const useEventStore = defineStore('eventStore', {
           outcome = { "charisma": 5 }
           break;
         case 'purge':
-          playerStore.modifyScrutiny(90);
-          result = 'Purged a heretic. Scrutiny +90.';
-          outcome = { "scrutiny": 90 }
+          playerStore.modifyScrutiny(50);
+          result = 'Purged a heretic. Scrutiny +50.';
+          outcome = { "scrutiny": 50 }
           break;
         case 'pray':
-          playerStore.modifyCharisma(5);
-          result = 'Prayed for guidance. charisma +5.';
-          outcome = { "charisma": 5 }
+          playerStore.modifyFaith(10);
+          result = 'Prayed for guidance. faith +10.';
+          outcome = { "faith": 10 }
           break;
       }
       this.todaysEvents.push({ outcome: outcome });
@@ -204,6 +204,10 @@ export const useEventStore = defineStore('eventStore', {
 
     getNpc(npcId) {
       return this.npcPool.find(npc => npc.id === npcId);
+    },
+
+    clearEvents() {
+      this.events = [];
     },
   },
 });

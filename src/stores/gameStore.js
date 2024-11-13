@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { usePlayerStore } from './playerStore';
 import { useEventStore } from './eventStore';
+import { MAX_TIME } from '../config';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -11,6 +12,8 @@ export const useGameStore = defineStore('gameStore', {
     isGameOver: false,
     isGameStarted: false,
     gameOverMessage: null,
+    turnTimeRemaining: MAX_TIME,
+    timerInterval: null,
   }),
 
   actions: {
@@ -26,6 +29,8 @@ export const useGameStore = defineStore('gameStore', {
       usePlayerStore().resetState();
       useEventStore().initializeEvents();
       this.currentDay = new Date('1982-03-01');
+
+      this.startTurn();
     },
 
     endGame() {
@@ -54,9 +59,34 @@ export const useGameStore = defineStore('gameStore', {
 
     },
 
-    nextTurn() {
+    startTurn() {
+      this.turnTimeRemaining = MAX_TIME;
+      this.timerInterval = setInterval(this.onTick, 1000);
+    },
+
+    onTick() {
+      if (this.turnTimeRemaining <= 0) {
+        this.endTurn();
+        return;
+      }
+
+      this.turnTimeRemaining--;
+      usePlayerStore().onTick();
+      console.log('onTick', this.turnTimeRemaining);
+    },
+
+    endTurn() {
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+      }
+
       this.checkWinLose();
       if (this.isGameOver) {
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+        }
         return;
       }
 
@@ -70,6 +100,8 @@ export const useGameStore = defineStore('gameStore', {
 
       // see if we lost/won after the turn began
       this.checkWinLose();
+
+      this.startTurn();
     },
   },
 });

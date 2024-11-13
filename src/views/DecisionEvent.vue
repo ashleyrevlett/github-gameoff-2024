@@ -2,6 +2,9 @@
 <template>
   <div
     class="border border-black p-4 z-10 bg-transparent transition-all duration-300 w-full">
+    <p class="text-xs text-gray-500 text-right mb-2">
+      {{ totalEvents - 1 }} decisions remaining
+    </p>
     <h2 class="text-lg font-bold">{{ npc.name }}</h2>
     <p class="mb-3">{{ event.description }}</p>
     <div v-if="!event.resolution">
@@ -52,6 +55,7 @@ const props = defineProps({
 });
 
 const event = computed(() => props.event);
+const totalEvents = computed(() => eventStore.events.length);
 
 const npc = computed(() => eventStore.getNpc(event.value.npc_id));
 
