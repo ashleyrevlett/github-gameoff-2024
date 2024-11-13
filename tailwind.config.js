@@ -6,6 +6,8 @@ export default {
     'text-lg',
     'bg-green-500',
     'bg-red-500',
+    'bg-purple-500',
+    'router-link',
     'router-link-active'
   ],
   theme: {

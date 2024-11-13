@@ -152,7 +152,7 @@ export const useEventStore = defineStore('eventStore', {
     logEvent(event, choice, outcome) {
       var outcomeString = Object.entries(outcome).map(([key, value]) => `${key}: ${value}`).join(', ');
       const eventLog = `${event.title} -- You chose: ${choice.title}. Outcome: ${choice.message} Effect: ${outcomeString}`;
-      this.todaysEvents.push(eventLog);
+      this.todaysEvents.push({ event, choice, outcome });
       console.log('eventLog', eventLog);
     },
 
@@ -161,27 +161,32 @@ export const useEventStore = defineStore('eventStore', {
     },
 
     setAgenda(agenda) {
-      var result = '';
+      let result = '';
+      let outcome = {};
       const playerStore = usePlayerStore();
       switch (agenda) {
         case 'worship':
           playerStore.modifyCharisma(10);
           result = 'Worshipped the God of the Church. charisma +10.';
+          outcome = { "charisma": 10 }
           break;
         case 'recruit':
           playerStore.modifyCharisma(5);
           result = 'Recruited a new follower. charisma +5.';
+          outcome = { "charisma": 5 }
           break;
         case 'purge':
-          playerStore.modifyCharisma(-1);
-          result = 'Purged a heretic. charisma -1.';
+          playerStore.modifyScrutiny(90);
+          result = 'Purged a heretic. Scrutiny +90.';
+          outcome = { "scrutiny": 90 }
           break;
         case 'pray':
           playerStore.modifyCharisma(5);
           result = 'Prayed for guidance. charisma +5.';
+          outcome = { "charisma": 5 }
           break;
       }
-      this.todaysEvents.push(result);
+      this.todaysEvents.push({ outcome: outcome });
       console.log('result', result);
       return result;
     },

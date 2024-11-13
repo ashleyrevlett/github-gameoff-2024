@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>Daily Agenda</h2>
+    <h2 class="text-center">Daily Agenda</h2>
   </div>
-  <div class="flex gap-2" v-if="!result">
+  <div class="flex flex-col gap-2" v-if="!result">
     <button @click="setAgenda('worship')" class="btn">Worship</button>
     <button @click="setAgenda('recruit')" class="btn">Recruit</button>
     <button @click="setAgenda('purge')" class="btn">Purge Heretics</button>

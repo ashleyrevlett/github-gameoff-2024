@@ -15,7 +15,7 @@ export const useGameStore = defineStore('gameStore', {
 
   actions: {
     startNewGame() {
-      // console.log('startNewGame');
+      console.log('startNewGame', this.isGameStarted, this.isGameOver);
       if (this.isGameStarted) {
         return;
       }
@@ -28,6 +28,9 @@ export const useGameStore = defineStore('gameStore', {
       this.currentDay = new Date('1982-03-01');
     },
 
+    endGame() {
+      this.isGameStarted = false;
+    },
 
     checkWinLose() {
       const playerStore = usePlayerStore();

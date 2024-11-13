@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-  <div class="fixed inset-0 bg-black/50 flex items-center justify-center">
+  <div class="fixed inset-0 bg-white flex items-center justify-center">
     <div class="bg-white p-4 rounded-lg w-96">
       <slot></slot>
       <button
