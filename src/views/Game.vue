@@ -1,4 +1,5 @@
 <template>
+  <Notification v-if="notification" :notification="notification" />
   <main v-if="!gameStore.isGameOver" class="p-4 flex flex-col md:flex-row gap-4">
     <header class="w-100 md:w-1/2" >
       <NavBar />
@@ -41,17 +42,19 @@ import DailyAgenda from "./DailyAgenda.vue";
 import { useGameStore } from '../stores/gameStore';
 import { useEventStore } from '../stores/eventStore';
 import { usePlayerStore } from '../stores/playerStore';
+import { useNotificationStore } from '../stores/notificationStore';
 import Stats from '../components/Stats.vue';
 import NavBar from '../components/NavBar.vue';
 import EndDay from '../components/EndDay.vue';
+import Notification from '../components/Notification.vue';
 
 const gameStore = useGameStore();
 const eventStore = useEventStore();
 const playerStore = usePlayerStore();
-
+const notificationStore = useNotificationStore();
 const events = computed(() => eventStore.events);
 const agendaDecided = computed(() => eventStore.agendaDecided);
-
+const notification = computed(() => notificationStore.notifications.length > 0 ? notificationStore.notifications[0] : null);
 onMounted(() => {
   if (!gameStore.isGameStarted) {
     gameStore.startNewGame();

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import events from '../data/events.json';
 import beliefs from '../data/beliefs.json';
+import npcs from '../data/npcs.json';
 import { usePlayerStore } from './playerStore';
 import { useGameStore } from './gameStore';
 import { useNotificationStore } from './notificationStore';
@@ -13,12 +14,14 @@ export const useEventStore = defineStore('eventStore', {
     agendaDecided: null,
     beliefs: [],
     beliefPool: [],
+    npcPool: [],
   }),
 
   actions: {
     initializeEvents() {
       this.eventPool = events; // Load events from events.json into eventPool
       this.beliefPool = beliefs; // Load beliefs from beliefs.json into beliefs
+      this.npcPool = npcs; // Load npcs from npcs.json into npcPool
       this.todaysEvents = [];
       this.events = [];
       this.beliefs = [];
@@ -47,33 +50,35 @@ export const useEventStore = defineStore('eventStore', {
 
     triggerRandomEvent() {
       // conditions need charisma, money, and scrutiny to be defined
-      const charisma = usePlayerStore().charisma;
-      const faith = usePlayerStore().faith;
-      const scrutiny = usePlayerStore().scrutiny;
+      // const charisma = usePlayerStore().charisma;
+      // const faith = usePlayerStore().faith;
+      // const scrutiny = usePlayerStore().scrutiny;
 
-      const possibleEvents = this.eventPool.filter(e => {
-        // provide variable names so bundler doesn't mangle them in prod builds
-        const context = { charisma, faith, scrutiny };
-        const passesCondition = e.condition
-          ? new Function('charisma', 'faith', 'scrutiny', `return ${e.condition}`)(charisma, faith, scrutiny)
-          : true;
-        return passesCondition;
-      });
-      if (!possibleEvents.length) {
-        console.log('no possibleEvents', eventType);
-        return;
-      }
+      // const possibleEvents = this.eventPool.filter(e => {
+      //   // provide variable names so bundler doesn't mangle them in prod builds
+      //   const context = { charisma, faith, scrutiny };
+      //   const passesCondition = e.condition
+      //     ? new Function('charisma', 'faith', 'scrutiny', `return ${e.condition}`)(charisma, faith, scrutiny)
+      //     : true;
+      //   return passesCondition;
+      // });
+      // if (!possibleEvents.length) {
+      //   console.log('no possibleEvents', eventType);
+      //   return;
+      // }
 
-      const randomEventIndex = Math.floor(Math.random() * possibleEvents.length);
-      const randomEvent = possibleEvents[randomEventIndex];
+      // const possibleEvents = this.eventPool.slice();
+
+      const randomEventIndex = Math.floor(Math.random() * this.eventPool.length);
+      const randomEvent = this.eventPool[randomEventIndex];
 
       if (!randomEvent) {
-        console.error('no randomEvent', eventType, possibleEvents, randomEventIndex);
+        console.error('no randomEvent', this.eventPool, randomEventIndex);
         return;
       }
 
       // setup event, add to events
-      const sendDate = useGameStore().currentDay;
+      // const sendDate = useGameStore().currentDay;
       try {
         console.log('randomEvent', randomEvent);
         console.log(this.events);
@@ -81,7 +86,7 @@ export const useEventStore = defineStore('eventStore', {
           ...randomEvent,
           uid: window.crypto.randomUUID(),
           resolution: null,
-          sendDate: sendDate,
+          // sendDate: sendDate,
         });
       } catch (error) {
         console.error('error adding event', error);
@@ -113,20 +118,26 @@ export const useEventStore = defineStore('eventStore', {
       // do we hold supporting beliefs?
       const outcome = choice.outcome;
       let beliefMultiplier = 1;
-      if (choice.beliefs_supported) {
-        const belief = this.beliefPool.find(b => b.id === choice.beliefs_supported);
-        if (!belief) {
-          console.error('no belief', choice.beliefs_supported);
-          return;
-        }
-
-        if (this.beliefs.includes(belief)) {
-          console.log('belief already held', belief.title);
-          beliefMultiplier = 2;
-        } else {
-          console.log('new belief', belief.title);
-          this.beliefs.push(belief); // get a new belief
-          outcome.belief = belief.title;
+      if (choice.beliefs_supported?.length) {
+        for (const beliefId of choice.beliefs_supported) {
+          const belief = this.beliefPool.find(b => b.id === beliefId);
+          if (!belief) {
+            console.error('no belief', beliefId);
+            return;
+          }
+          if (this.beliefs.includes(belief)) {
+            console.log('belief already held', belief.title);
+            beliefMultiplier = 2;
+          } else {
+            console.log('new belief', belief.title);
+            this.beliefs.push(belief); // get a new belief
+            outcome.belief = belief.title;
+            useNotificationStore().addNotification({
+              id: window.crypto.randomUUID(),
+              title: 'New Belief',
+              message: belief.title,
+            });
+          }
         }
       }
 
@@ -189,6 +200,10 @@ export const useEventStore = defineStore('eventStore', {
       this.todaysEvents.push({ outcome: outcome });
       console.log('result', result);
       return result;
+    },
+
+    getNpc(npcId) {
+      return this.npcPool.find(npc => npc.id === npcId);
     },
   },
 });

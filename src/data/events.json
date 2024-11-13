@@ -1,152 +1,163 @@
 [
   {
-    "id": "first-vision",
-    "title": "The First Vision",
-    "description": "Xenu speaks. His words burn your mind. You must declare what you’ve seen.",
+    "id": "disciple-starla-preach-market",
+    "npc_id": "disciple-starla",
+    "description": "Leader, the market is bustling. It's the perfect time to spread Xenu’s message. Let me take a few of our most devoted.",
     "choices": [
       {
-        "id": "proclaim-xenu",
-        "title": "Proclaim Xenu",
+        "text": "Allow Starla to preach at the market.",
+        "message": "The word of Xenu will reach new ears, Leader.",
         "outcome": {
-          "faith": 30
+          "faith": 15,
+          "scrutiny": 10
         },
-        "description": "You shout Xenu’s name. Your followers quake. They await your word.",
-        "message": "The crowd erupts, their faith now a flame. You stand as the divine vessel, stronger than ever before. They are yours to lead.",
-        "beliefs_supported": "xenu-alone-is-the-true-god",
-        "beliefs_opposed": null
+        "beliefs_supported": ["xenu-alone-is-the-true-god", "resist-earthly-authorities"],
+        "beliefs_opposed": []
       },
       {
-        "id": "speak-in-riddles",
-        "title": "Speak in Riddles",
+        "text": "Ask her to keep the faith within the cult.",
+        "message": "Of course, Leader. The faithful will keep the message within.",
         "outcome": {
+          "faith": -5,
+          "scrutiny": -5
+        },
+        "beliefs_supported": [],
+        "beliefs_opposed": ["resist-earthly-authorities"]
+      }
+    ]
+  },
+  {
+    "id": "brother-nimbus-fundraising-scheme",
+    "npc_id": "brother-nimbus",
+    "description": "Leader, I’ve got an idea for a fundraiser. It’s… flexible on ethics. Shall I proceed?",
+    "choices": [
+      {
+        "text": "Approve the fundraising scheme.",
+        "message": "Leave it to me. Xenu’s followers will fund his work.",
+        "outcome": {
+          "money": 50,
           "scrutiny": 15
         },
-        "description": "You speak in riddles. Their eyes widen. The authorities listen.",
-        "message": "The whispers of your cryptic words grow. Some are shaken, some intrigued. Yet, eyes from outside grow sharper, and the pressure mounts.",
-        "beliefs_supported": "reject-the-illusion-of-earth",
-        "beliefs_opposed": null
-      }
-    ],
-    "condition": "faith >= 0"
-  },
-  {
-    "id": "silence-ritual",
-    "title": "The Silence Ritual",
-    "description": "The silence is the test. You must choose how long they stay silent.",
-    "choices": [
-      {
-        "id": "silence-7-days",
-        "title": "Silence for 7 Days",
-        "outcome": {
-          "faith": 15
-        },
-        "description": "Seven days. The followers endure. The silence stretches.",
-        "message": "They submit. The days drag on, but the followers are changed. They feel your power, and their faith becomes unshakable.",
-        "beliefs_supported": "oza-speaks-for-xenu",
-        "beliefs_opposed": null
+        "beliefs_supported": [],
+        "beliefs_opposed": ["reject-the-illusion-of-earth"]
       },
       {
-        "id": "silence-30-days",
-        "title": "Silence for 30 Days",
+        "text": "Refuse the scheme.",
+        "message": "As you wish, Leader. A less… creative path, then.",
         "outcome": {
-          "scrutiny": 20
+          "faith": -5,
+          "scrutiny": -5
         },
-        "description": "Thirty days. The silence is endless. The authorities stare.",
-        "message": "The silence wears on. It breaks them. Your followers grow restless, and the government notices. Their eyes are now upon you.",
-        "beliefs_supported": "endure-suffering-to-prove-faith",
-        "beliefs_opposed": null
+        "beliefs_supported": [],
+        "beliefs_opposed": []
       }
-    ],
-    "condition": "charisma >= 10"
+    ]
   },
   {
-    "id": "mind-sacrifice",
-    "title": "The Sacrifice of the Mind",
-    "description": "They must give their minds to ascend. Who will go first?",
+    "id": "visionary-valda-sacrifice-vision",
+    "npc_id": "visionary-valda",
+    "description": "Leader, Xenu demands a sacrifice. Approve it, and we shall grow closer to ascension.",
     "choices": [
       {
-        "id": "sacrifice-weakest",
-        "title": "Sacrifice the Weakest",
+        "text": "Approve the sacrifice.",
+        "message": "It will be done. Xenu will see our devotion.",
         "outcome": {
-          "faith": 25
-        },
-        "description": "The weakest give all. The strong are stirred. The choice is made.",
-        "message": "They follow. The weak fall, their minds sacrificed. But the rest are emboldened, stronger in their belief. Your following grows.",
-        "beliefs_supported": "reject-the-illusion-of-earth",
-        "beliefs_opposed": null
-      },
-      {
-        "id": "sacrifice-all",
-        "title": "Sacrifice All",
-        "outcome": {
+          "faith": 20,
           "scrutiny": 25
         },
-        "description": "All must give. The sacrifice will be total.",
-        "message": "All submit. The act is complete, but the world takes notice. The authorities tighten their gaze, and whispers of madness grow louder.",
-        "beliefs_supported": "the-body-is-a-vessel",
-        "beliefs_opposed": null
-      }
-    ],
-    "condition": "faith > 30"
-  },
-  {
-    "id": "flock-gathering",
-    "title": "The Gathering of the Flock",
-    "description": "They come. The gathering. It is time to speak.",
-    "choices": [
-      {
-        "id": "declare-right",
-        "title": "Declare Your Right",
-        "outcome": {
-          "charisma": 15
-        },
-        "description": "You stand tall. Your words strike. They are yours.",
-        "message": "The crowd roars. Your power is undeniable. They see you as their leader, and you stand as their sole path to salvation.",
-        "beliefs_supported": "oza-speaks-for-xenu",
-        "beliefs_opposed": null
+        "beliefs_supported": ["sacrifice-for-xenus-favor"],
+        "beliefs_opposed": []
       },
       {
-        "id": "proclaim-doomsday",
-        "title": "Proclaim Doomsday",
+        "text": "Refuse the sacrifice.",
+        "message": "A shame, Leader. Xenu’s path grows longer.",
         "outcome": {
-          "faith": 20
+          "faith": -10,
+          "scrutiny": -10
         },
-        "description": "You tell them of the end. They kneel. Your word is gospel.",
-        "message": "They kneel before you, their faith unbreakable. The comet grows closer in their hearts, and the vision of doomsday becomes their singular truth.",
-        "beliefs_supported": "ascend-on-doomsday",
-        "beliefs_opposed": null
+        "beliefs_supported": [],
+        "beliefs_opposed": ["sacrifice-for-xenus-favor"]
       }
-    ],
-    "condition": "charisma >= 20"
+    ]
   },
   {
-    "id": "astral-invocation",
-    "title": "The Astral Invocation",
-    "description": "You reach into the void. Xenu waits. Will you call him?",
+    "id": "sheriff-callum-briggs-security-inquiry",
+    "npc_id": "sheriff-callum-briggs",
+    "description": "I hear your place has little security, Leader. I can arrange protection if you cooperate.",
     "choices": [
       {
-        "id": "summon-xenu",
-        "title": "Summon Xenu",
+        "text": "Hire the sheriff’s 'security services.'",
+        "message": "Good choice. You’ll be safe, for a price.",
         "outcome": {
-          "faith": 10
+          "money": -30,
+          "scrutiny": -15
         },
-        "description": "You demand his presence. You call out. The silence responds.",
-        "message": "Xenu’s presence fills the air. Your followers are shaken but inspired. Your faith in his power is now known.",
-        "beliefs_supported": "xenu-alone-is-the-true-god",
-        "beliefs_opposed": null
+        "beliefs_supported": [],
+        "beliefs_opposed": ["resist-earthly-authorities"]
       },
       {
-        "id": "invoke-xenu-silently",
-        "title": "Invoke Xenu in Silence",
+        "text": "Decline the sheriff’s offer.",
+        "message": "Suit yourself. Hope you don’t regret it.",
         "outcome": {
-          "scrutiny": 25
+          "faith": -5,
+          "scrutiny": 5
         },
-        "description": "You wait. Silent. The void answers, but so do the watchers.",
-        "message": "The silence is broken. The authorities move in. They watch with suspicion. The ritual continues, but at a price.",
-        "beliefs_supported": "the-doomsday-clock-is-sacred",
-        "beliefs_opposed": null
+        "beliefs_supported": ["resist-earthly-authorities"],
+        "beliefs_opposed": []
       }
-    ],
-    "condition": "scrutiny < 50"
+    ]
+  },
+  {
+    "id": "tabitha-duane-meeting-request",
+    "npc_id": "tabitha-duane",
+    "description": "Leader, I demand a meeting with my son. If he’s truly there by choice, he’ll tell me himself.",
+    "choices": [
+      {
+        "text": "Allow the meeting.",
+        "message": "Thank you. I’ll see him with my own eyes.",
+        "outcome": {
+          "faith": -5,
+          "scrutiny": 5
+        },
+        "beliefs_supported": [],
+        "beliefs_opposed": []
+      },
+      {
+        "text": "Deny the meeting.",
+        "message": "This isn’t over, Leader. I’ll find a way.",
+        "outcome": {
+          "faith": 5,
+          "scrutiny": 15
+        },
+        "beliefs_supported": [],
+        "beliefs_opposed": ["resist-earthly-authorities"]
+      }
+    ]
+  },
+  {
+    "id": "journalist-lana-cross-inside-access",
+    "npc_id": "journalist-lana-cross",
+    "description": "Leader, rumors are spreading. Give me inside access, and I can help your image.",
+    "choices": [
+      {
+        "text": "Grant Lana inside access.",
+        "message": "Good choice, Leader. I’ll make sure the world sees your side.",
+        "outcome": {
+          "faith": 10,
+          "scrutiny": -10
+        },
+        "beliefs_supported": [],
+        "beliefs_opposed": ["resist-earthly-authorities"]
+      },
+      {
+        "text": "Refuse access.",
+        "message": "Keeping secrets? That’s a story in itself.",
+        "outcome": {
+          "scrutiny": 10
+        },
+        "beliefs_supported": ["resist-earthly-authorities"],
+        "beliefs_opposed": []
+      }
+    ]
   }
 ]

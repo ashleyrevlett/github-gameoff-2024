@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Disciple Starla",
+    "group": "cult",
+    "id": "disciple-starla",
+    "description": "Eager and devout, quick to find signs everywhere."
+  },
+  {
+    "name": "Brother Nimbus",
+    "group": "cult",
+    "id": "brother-nimbus",
+    "description": "Smooth talker, always with an eye on his own gain."
+  },
+  {
+    "name": "Visionary Valda",
+    "group": "cult",
+    "id": "visionary-valda",
+    "description": "Elderly and intense. Insists her visions reveal hidden truths."
+  },
+  {
+    "name": "Sheriff Callum Briggs",
+    "group": "community",
+    "id": "sheriff-callum-briggs",
+    "description": "Unimpressed with cults. Keeps his distance, but watches closely."
+  },
+  {
+    "name": "Tabitha Duane",
+    "group": "community",
+    "id": "tabitha-duane",
+    "description": "Worried mother, ready to do whatever it takes to get her son back."
+  },
+  {
+    "name": "Journalist Lana Cross",
+    "group": "community",
+    "id": "journalist-lana-cross",
+    "description": "Relentless reporter, sensing her next big story in the cult’s secrets."
+  }
+]
