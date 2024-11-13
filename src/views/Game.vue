@@ -6,14 +6,17 @@
       <Stats />
     </header>
     <section class="w-100 md:w-1/2">
-      <DecisionEvent
-        v-if="events && events.length > 0"
-        :event="events[0]"
-      />
-      <DailyAgenda
-        v-else-if="!agendaDecided"
-      />
-      <EndDay v-else @nextTurn="nextTurn" />
+      <TransitionGroup name="fade-slide-down">
+        <DecisionEvent
+          v-if="events && events.length > 0"
+          :event="events[0]"
+          :key="events[0].uid"
+        />
+        <DailyAgenda
+          v-else-if="!agendaDecided"
+        />
+        <EndDay v-else @nextTurn="nextTurn" />
+      </TransitionGroup>
     </section>
   </main>
   <main v-else>
