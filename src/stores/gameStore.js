@@ -1,107 +1,89 @@
-// /src/stores/gameStore.js
 import { defineStore } from 'pinia';
-import { usePlayerStore } from './playerStore';
-import { useEventStore } from './eventStore';
-import { MAX_TIME } from '../config';
+
+const GAME_STATES = {
+  MENU: 'menu',
+  PLAYING: 'playing',
+  PAUSED: 'paused',
+  WON: 'won',
+  LOST: 'lost',
+};
+
+const SECONDS_PER_DAY = 15;
+const DAYS_PER_GAME = 30;
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
-    turn: 1,
-    maxTurns: 30,
-    currentDay: new Date('1982-03-01'),
-    isGameOver: false,
-    isGameStarted: false,
-    gameOverMessage: null,
-    turnTimeRemaining: MAX_TIME,
-    timerInterval: null,
+    elapsedTime: 0,
+    maxTime: DAYS_PER_GAME * SECONDS_PER_DAY,
+    gameState: GAME_STATES.PLAYING,
+    favor: 0,
+    faith: 0,
+    happiness: 0,
+    scrutiny: 0,
+    followers: 0,
+    money: 0,
+    timer: null,
   }),
 
+  getters: {
+    isPlaying: (state) => state.gameState === GAME_STATES.PLAYING,
+    isPaused: (state) => state.gameState === GAME_STATES.PAUSED,
+    faithPerSecond: (state) => state.faith * 0.1,
+    daysRemaining: (state) => Math.max(0, Math.floor((state.maxTime - state.elapsedTime) / SECONDS_PER_DAY)),
+  },
+
   actions: {
-    startNewGame() {
-      console.log('startNewGame', this.isGameStarted, this.isGameOver);
-      if (this.isGameStarted) {
-        return;
+    startGame() {
+      // reset the game state and start timer
+      this.gameState = GAME_STATES.PLAYING;
+      this.elapsedTime = 0;
+      this.approval = 0;
+      this.faith = 0;
+      this.happiness = 0;
+      this.scrutiny = 0;
+      this.followers = 0;
+      this.money = 0;
+
+      if (!this.timer) {
+        this.timer = setInterval(this.onTick, 1000);
       }
-
-      this.isGameStarted = true;
-      this.turn = 1;
-      this.isGameOver = false;
-      usePlayerStore().resetState();
-      useEventStore().initializeEvents();
-      this.currentDay = new Date('1982-03-01');
-
-      this.startTurn();
     },
 
-    endGame() {
-      this.isGameStarted = false;
+    pauseTimer() {
+      this.gameState = GAME_STATES.PAUSED;
     },
 
-    checkWinLose() {
-      const playerStore = usePlayerStore();
-      if (playerStore.charisma >= 100 && playerStore.scrutiny <= 100) {
-        this.isGameOver = true;
-        this.gameOverMessage = 'The artist is a superstar! You win!';
-        return;
-      }
-
-      if (playerStore.scrutiny >= 100) {
-        this.isGameOver = true;
-        this.gameOverMessage = 'The artist burned out and quit.';
-        return;
-      }
-
-      if (this.turn >= this.maxTurns && playerStore.charisma < 100) {
-        this.isGameOver = true;
-        this.gameOverMessage = 'Time\'s up! You failed to reach superstar status.';
-        return;
-      }
-
-    },
-
-    startTurn() {
-      this.turnTimeRemaining = MAX_TIME;
-      this.timerInterval = setInterval(this.onTick, 1000);
+    unpauseTimer() {
+      this.gameState = GAME_STATES.PLAYING;
     },
 
     onTick() {
-      if (this.turnTimeRemaining <= 0) {
-        this.endTurn();
-        return;
+      if (this.gameState === GAME_STATES.PLAYING) {
+        this.elapsedTime++;
+        this.faith += this.faithPerSecond;
+        this.checkWinLose();
       }
-
-      this.turnTimeRemaining--;
-      usePlayerStore().onTick();
-      console.log('onTick', this.turnTimeRemaining);
     },
 
-    endTurn() {
-      if (this.timerInterval) {
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
+    checkWinLose() {
+      if (this.elapsedTime >= this.maxTime) {
+        this.gameState = GAME_STATES.WON;
+      } else if (this.scrutiny >= 100) {
+        this.gameState = GAME_STATES.LOST;
       }
-
-      this.checkWinLose();
-      if (this.isGameOver) {
-        if (this.timerInterval) {
-          clearInterval(this.timerInterval);
-          this.timerInterval = null;
-        }
-        return;
-      }
-
-      // reset resources and events
-      useEventStore().nextTurn();
-      usePlayerStore().nextTurn();
-
-      // advance the day
-      this.turn++;
-      this.currentDay.setDate(this.currentDay.getDate() + 1);
-
-      // see if we lost/won after the turn began
-      this.checkWinLose();
-
-      this.startTurn();
     },
+
+    pray() {
+      this.favor += 1;
+    },
+
+    preach() {
+      this.faith += 1;
+    },
+
+    bless() {
+      this.happiness += 1;
+    },
+
   },
 });
