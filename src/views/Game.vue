@@ -1,15 +1,17 @@
 <template>
-  <main v-if="gameStore.isPlaying" class="p-4 flex flex-col md:flex-row gap-4">
+  <main v-if="gameStore.isPlaying" class="">
     <header class="w-100" >
       <Stats />
     </header>
 
-    <button @click="gameStore.pauseTimer" class="btn">Pause</button>
-    <button @click="restartGame" class="btn">Restart</button>
+    <footer class="w-full mt-auto flex flex-row gap-3">
+      <button @click="gameStore.pauseTimer" class="btn flex-1">Pause</button>
+      <button @click="restartGame" class="btn flex-1">Restart</button>
+    </footer>
   </main>
-  <main v-else-if="gameStore.isPaused">
+  <main v-else-if="gameStore.isPaused" class="items-center justify-center">
     PAUSED
-    <button @click="gameStore.unpauseTimer" class="btn">Unpause Timer</button>
+    <button @click="gameStore.unpauseTimer" class="btn">Unpause</button>
   </main>
   <main v-else>
     <section class="p-4 border border-black m-4 text-center">
@@ -39,3 +41,9 @@ function restartGame() {
 }
 
 </script>
+
+<style scoped>
+main {
+  @apply p-4 flex gap-4 w-full min-h-screen flex-col md:flex-row;
+}
+</style>

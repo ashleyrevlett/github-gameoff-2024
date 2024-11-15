@@ -29,7 +29,7 @@ export const useGameStore = defineStore('gameStore', {
     isPlaying: (state) => state.gameState === GAME_STATES.PLAYING,
     isPaused: (state) => state.gameState === GAME_STATES.PAUSED,
     faithPerSecond: (state) => state.faith * 0.1,
-    daysRemaining: (state) => Math.max(0, Math.floor((state.maxTime - state.elapsedTime) / SECONDS_PER_DAY)),
+    daysRemaining: (state) => Math.max(0, Math.ceil((state.maxTime - state.elapsedTime) / SECONDS_PER_DAY)),
   },
 
   actions: {

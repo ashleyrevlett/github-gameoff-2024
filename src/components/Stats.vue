@@ -1,6 +1,9 @@
 <template>
-  <div>
+  <div class="flex justify-between mb-4">
     <p>{{ gameStore.daysRemaining }} Days Left</p>
+    <p>{{ gameStore.followers }} Followers</p>
+  </div>
+  <div>
     <StatBar
       label="Favor"
       :value="gameStore.favor"
@@ -26,7 +29,6 @@
     />
   </div>
 
-  <p>Followers: {{ gameStore.followers }}</p>
   <p>Money: {{ gameStore.money }}</p>
 </template>
 

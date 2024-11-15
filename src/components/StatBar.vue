@@ -6,8 +6,8 @@
       :cooldown="cooldown"
     />
     <div class="ml-auto">
-      {{ label }}: {{ value.toFixed(1) }}
-      <span v-if="valuePerSecond" class="text-sm">
+      {{ label }} {{ Math.floor(value).toLocaleString() }}
+      <span v-if="valuePerSecond" class="text-xs block text-right">
         (+{{ valuePerSecond.toFixed(1) }}/s)
       </span>
     </div>
