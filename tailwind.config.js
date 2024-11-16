@@ -4,6 +4,7 @@ export default {
   safelist: [
     'font-bold',
     'text-lg',
+    'bg-black',
     'bg-green-500',
     'bg-red-500',
     'bg-purple-500',
