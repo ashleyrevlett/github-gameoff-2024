@@ -2,10 +2,10 @@
   <div class="flex-1">
     <div class="flex-grow w-100 h-3 bg-white border border-black rounded-full overflow-hidden">
       <div
-        class="h-full rounded-full transition-width"
-        :class="`bg-black`"
+        class="h-full rounded-full transition-all bg-black"
         :style="{
           width: `${percentage}%`,
+          transitionDuration: `1s`,
         }"
       ></div>
     </div>

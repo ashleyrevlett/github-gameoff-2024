@@ -27,14 +27,48 @@
 import { onMounted } from 'vue';
 import Stats from '../components/Stats.vue';
 import Notifications from '../components/Notifications.vue';
+import { useECSStore } from '../stores/ecsStore';
+import { ResourceSystem } from '../game/ecs/systems/ResourceSystem';
+import { ResourceComponent } from '../game/ecs/components/ResourceComponent';
+
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
 import { useGameStore } from '../stores/gameStore';
 const gameStore = useGameStore();
 
+const ecsStore = useECSStore();
+
+function gameLoop(systems) {
+  // console.log('gameLoop');
+  for (const system of systems) {
+    system.update(1000); // every second
+  }
+}
+
+
+function startGame() {
+  const player = ecsStore.createEntity('player');
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'favor', 0, 10, 1));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'faith', 0, 10, 0.1));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'love', 0, 10, 0.01));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'followers', 0, 10, 0));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'money', 0, 10, 0));
+
+  // Create systems
+  const systems = [
+    new ResourceSystem(),
+  ];
+
+  console.log('startGame');
+
+  setInterval(() => gameLoop(systems), 1000);
+}
+
+
 onMounted(() => {
-  gameStore.startGame();
+  startGame();
+  // gameStore.startGame();
 });
 
 function restartGame() {
