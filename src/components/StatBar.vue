@@ -38,6 +38,7 @@ const props = defineProps({
       max: 100,
       perSecond: 0,
       level: 1,
+      unlocked: true,
     }),
   },
   action: Function,
@@ -60,7 +61,7 @@ onUnmounted(() => {
 });
 
 function handleLevelUp(data) {
-  if (data.type === props.resource.type) {
+  if (data.resourceType === props.resource.resourceType) {
     console.log('handleLevelUp', data);
     justLeveledUp.value = true;
     setTimeout(() => {

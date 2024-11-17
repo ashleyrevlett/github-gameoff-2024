@@ -24,61 +24,32 @@
 
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import Stats from '../components/Stats.vue';
 import Notifications from '../components/Notifications.vue';
-import { useECSStore } from '../stores/ecsStore';
-import { ResourceSystem } from '../game/ecs/systems/ResourceSystem';
-import { ResourceComponent } from '../game/ecs/components/ResourceComponent';
-// import { ResourceEffectComponent } from '../game/ecs/components/ResourceEffectComponent';
-
-import { useRouter } from 'vue-router';
-const router = useRouter();
 
 import { useGameStore } from '../stores/gameStore';
-const gameStore = useGameStore();
+const gameStore = useGameStore()
 
-const ecsStore = useECSStore();
+let lastTime = performance.now()
+let animationFrameId;
 
-function gameLoop(systems) {
-  // console.log('gameLoop');
-  for (const system of systems) {
-    system.update(1000); // every second
-  }
+function onTick() {
+  const currentTime = performance.now()
+  const dt = (currentTime - lastTime) / 1000
+  lastTime = currentTime
+  gameStore.update(dt)
+  animationFrameId = requestAnimationFrame(onTick) // Request next frame
 }
-
-
-function startGame() {
-  gameStore.startGame();
-
-  const player = ecsStore.createEntity('player');
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'favor', 0, 10, 1, true));
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'faith', 0, 10, 0.1, false, 'favor', 2));
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'love', 0, 10, 0.01, false, 'followers', 2));
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'money', 0, 10, 0, false, 'followers', 2));
-
-  // const ka = ecsStore.createEntity('ka');
-  // ecsStore.addComponent(ka.id, new ResourceEffectComponent(ka.id, 'favor', -0.1));
-
-  // Create systems
-  const systems = [
-    new ResourceSystem(),
-  ];
-
-  console.log('startGame');
-
-  setInterval(() => gameLoop(systems), 1000);
-}
-
 
 onMounted(() => {
-  startGame();
-});
+  gameStore.startGame()
+  animationFrameId = requestAnimationFrame(onTick) // Start animation loop
+})
 
-function restartGame() {
-  router.push({ name: 'intro' });
-}
-
+onUnmounted(() => {
+  if (animationFrameId) cancelAnimationFrame(animationFrameId); // Clean up
+})
 </script>
 
 <style scoped>
