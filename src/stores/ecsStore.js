@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia';
+import { eventBus } from '../game/services/EventBus';
 
 export const useECSStore = defineStore('ecs', {
   state: () => ({
     entities: new Map(),
     components: new Map(),
-    lastTick: Date.now(),
+    eventBus,
   }),
 
   actions: {

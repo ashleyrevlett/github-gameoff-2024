@@ -2,8 +2,8 @@
   <div class="flex justify-between mb-4">
     <p>{{ gameStore.daysRemaining }} Days Left</p>
     <p class="text-right">
-      {{ followers?.current }} Followers<br />
-      ${{ money?.current.toLocaleString() }}
+      <span v-if="followers?.unlocked">{{ followers?.current }} / {{ followers?.max }} Followers <span class="text-xs text-gray-500">Lvl ({{ followers?.level }})</span><br /></span>
+      <span v-if="money?.unlocked">${{ money?.current.toLocaleString() }}</span>
     </p>
   </div>
   <div>
@@ -19,7 +19,7 @@
       :resource="faith"
       actionLabel="Preach"
       :action="() => doAction('faith')"
-      :cooldown="0.5"
+      :cooldown="0.1"
     />
     <StatBar
       label="Love"
@@ -33,10 +33,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { onMounted, onUnmounted, computed } from 'vue';
 import StatBar from '@/components/StatBar.vue';
 import { useGameStore } from '@/stores/gameStore';
 import { useECSStore } from '@/stores/ecsStore';
+import { eventBus } from '@/game/services/EventBus';
+import { useNotificationStore } from '../stores/notificationStore';
+// import { ResourceSystem } from '../game/ecs/systems/ResourceSystem';
 
 const gameStore = useGameStore();
 const ecsStore = useECSStore();
@@ -52,9 +55,36 @@ function doAction(resourceType) {
   console.log('doAction', resource);
   if (resource) {
     resource.triggerAction();
+    // ResourceSystem.triggerAction(resource);
   } else {
     console.error('No resource found', resourceType);
   }
 }
+
+const handleLevelUp = (data) => {
+  useNotificationStore().addNotification({
+    id: window.crypto.randomUUID(),
+    title: 'Level Up!',
+    message: `${data.type} reached level ${data.level}!`
+  });
+};
+
+const handleUnlocked = (data) => {
+  useNotificationStore().addNotification({
+    id: window.crypto.randomUUID(),
+    title: 'Unlocked!',
+    message: `${data.type} is now unlocked!`
+  });
+};
+
+onMounted(() => {
+  eventBus.on('resource:levelUp', handleLevelUp);
+  eventBus.on('resource:unlocked', handleUnlocked);
+});
+
+onUnmounted(() => {
+  eventBus.off('resource:levelUp', handleLevelUp);
+  eventBus.off('resource:unlocked', handleUnlocked);
+});
 
 </script>

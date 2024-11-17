@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="notification absolute bottom-0 left-0 w-full flex items-center justify-center gap-3 @apply bg-yellow-200 p-4">
+    <div class="notification w-full flex items-center justify-center gap-3 @apply bg-yellow-200 p-4">
       <div>
         <span class="font-bold">{{ notification.title }}</span>: <span v-html="notification.message"></span>
       </div>

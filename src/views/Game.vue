@@ -30,6 +30,7 @@ import Notifications from '../components/Notifications.vue';
 import { useECSStore } from '../stores/ecsStore';
 import { ResourceSystem } from '../game/ecs/systems/ResourceSystem';
 import { ResourceComponent } from '../game/ecs/components/ResourceComponent';
+// import { ResourceEffectComponent } from '../game/ecs/components/ResourceEffectComponent';
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -48,12 +49,16 @@ function gameLoop(systems) {
 
 
 function startGame() {
+  gameStore.startGame();
+
   const player = ecsStore.createEntity('player');
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'favor', 0, 10, 1));
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'faith', 0, 10, 0.1));
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'love', 0, 10, 0.01));
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'followers', 0, 10, 0));
-  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'money', 0, 10, 0));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'favor', 0, 10, 1, true));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'faith', 0, 10, 0.1, false, 'favor', 2));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'love', 0, 10, 0.01, false, 'followers', 2));
+  ecsStore.addComponent(player.id, new ResourceComponent(player.id, 'money', 0, 10, 0, false, 'followers', 2));
+
+  // const ka = ecsStore.createEntity('ka');
+  // ecsStore.addComponent(ka.id, new ResourceEffectComponent(ka.id, 'favor', -0.1));
 
   // Create systems
   const systems = [
@@ -68,7 +73,6 @@ function startGame() {
 
 onMounted(() => {
   startGame();
-  // gameStore.startGame();
 });
 
 function restartGame() {

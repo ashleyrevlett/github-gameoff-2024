@@ -5,7 +5,7 @@
         class="h-full rounded-full transition-all bg-black"
         :style="{
           width: `${percentage}%`,
-          transitionDuration: `1s`,
+          transitionDuration: `.1s`,
         }"
       ></div>
     </div>
