@@ -1,8 +1,9 @@
 <template>
-  <div
-    v-if="resource?.unlocked"
+  <Transition name="fade">
+    <div
+      v-if="resource?.unlocked"
     class="flex justify-between items-center my-3"
-    :class="{ 'animate-pulse': justLeveledUp }"
+    :class="{ 'animate-pulse': justLeveledUp && resource.level !== 1 }"
   >
     <ActionButton
       :action="action"
@@ -19,14 +20,18 @@
       </span>
     </div>
   </div>
+  </Transition>
 </template>
 
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
 import ActionButton from '@/components/ActionButton.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
-import { eventBus } from '@/game/services/eventBus';
+import { useNotificationStore } from '@/stores/notificationStore';
+
+const notificationStore = useNotificationStore();
+
 
 const props = defineProps({
   label: String,
@@ -49,26 +54,16 @@ const props = defineProps({
   },
 });
 
-const justLeveledUp = ref(false);
+
 const percentage = computed(() => props.resource?.current / props.resource?.max * 100 || 0);
 
-onMounted(() => {
-  eventBus.on('resource:levelUp', handleLevelUp);
-});
-
-onUnmounted(() => {
-  eventBus.off('resource:levelUp', handleLevelUp);
-});
-
-function handleLevelUp(data) {
-  if (data.resourceType === props.resource.resourceType) {
-    console.log('handleLevelUp', data);
-    justLeveledUp.value = true;
-    setTimeout(() => {
-      justLeveledUp.value = false;
-    }, 1000);
-  }
-}
+const justLeveledUp = ref(false);
+const levelWatcher = watch(() => props.resource.level, (newLevel) => {
+  justLeveledUp.value = true;
+  setTimeout(() => {
+    justLeveledUp.value = false;
+  }, 1000)
+})
 </script>
 
 <style scoped>

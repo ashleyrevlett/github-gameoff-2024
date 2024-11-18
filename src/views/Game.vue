@@ -7,16 +7,16 @@
 
     <footer class="w-auto max-w-[150px] mt-auto flex flex-row gap-3">
       <button @click="gameStore.pauseTimer" class="btn flex-1">Pause</button>
-      <button @click="restartGame" class="btn flex-1">Restart</button>
     </footer>
   </main>
   <main v-else-if="gameStore.isPaused" class="items-center justify-center">
     PAUSED
-    <button @click="gameStore.unpauseTimer" class="btn">Unpause</button>
+    <button @click="gameStore.unpauseTimer" class="btn mb-4 mt-2">Unpause</button>
+    <button @click="gameStore.startGame" class="btn">Restart</button>
   </main>
   <main v-else>
     <section class="p-4 border border-black m-4 text-center">
-      <button @click="restartGame" class="btn mt-2">New Game</button>
+      <button @click="gameStore.startGame" class="btn mt-2">New Game</button>
       <h1 class="font-bold text-lg mr-auto">Game Over</h1>
     </section>
   </main>

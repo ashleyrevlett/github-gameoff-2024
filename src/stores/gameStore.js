@@ -13,9 +13,22 @@ const GAME_STATES = {
 const SECONDS_PER_DAY = 15;
 const DAYS_PER_GAME = 30;
 
+class Blessing {
+  constructor(name, resourceType, perSecond, timeRemaining = 0) {
+    const blessing = reactive({
+      name,
+      resourceType,
+      perSecond,
+      timeRemaining
+    })
+
+    return blessing
+  }
+}
+
 // Resource class to replace ResourceComponent
 class Resource {
-  constructor(resourceType, current = 0, max = 100, perSecond = 0, level = 1, unlocked = false, unlockedBy = undefined) {
+  constructor(resourceType, current = 0, max = 10, perSecond = 0, level = 1, unlocked = false, unlockedBy = undefined) {
     // Make all properties reactive using ref or reactive
     const resource = reactive({
       resourceType,
@@ -39,11 +52,12 @@ export const useGameStore = defineStore('gameStore', {
     gameState: GAME_STATES.PLAYING,
     resources: {
       favor: new Resource('favor', 0, 10, 0, 0, true),
-      faith: new Resource('faith', 0, 10, 0.1, 1, false, { resourceType: 'favor', level: 2 }),
+      faith: new Resource('faith', 0, 10, 0, 1, false, { resourceType: 'favor', level: 2 }),
       followers: new Resource('followers', 0, 3, 0, 1, false, { resourceType: 'faith', level: 2 }),
-      love: new Resource('love', 0, 10, 0.01, 1, false, { resourceType: 'followers', level: 1 }),
+      love: new Resource('love', 0, 10, 0, 1, false, { resourceType: 'followers', level: 1 }),
       money: new Resource('money', 100.0, 1000000.0, 0, 1, false, { resourceType: 'followers', level: 2 })
-    }
+    },
+    blessings: []
   }),
 
   getters: {
@@ -61,8 +75,12 @@ export const useGameStore = defineStore('gameStore', {
 
       Object.values(this.resources).forEach(resource => {
         resource.current = 0
+        resource.max = 10
         resource.level = 1
+        resource.perSecond = 0
+        resource.unlocked = false
       })
+      this.resources.favor.unlocked = true
     },
 
     pauseTimer() {
@@ -79,8 +97,8 @@ export const useGameStore = defineStore('gameStore', {
 
       this.elapsedTime += dt
 
-      // set followers per second based on faith level
-      // this.resources.followers.perSecond = this.resources.faith.level * 0.1
+      // process blessings
+      this.updateBlessings(dt)
 
       // Update all resources
       Object.values(this.resources).forEach(resource => {
@@ -95,9 +113,36 @@ export const useGameStore = defineStore('gameStore', {
       })
     },
 
+    updateBlessings(dt) {
+      this.blessings.forEach(blessing => {
+        blessing.timeRemaining -= dt
+        if (blessing.timeRemaining <= 0) {
+          // blessing has expired
+          let resource = this.resources[blessing.resourceType]
+          resource.perSecond -= blessing.perSecond
+          this.blessings = this.blessings.filter(b => b !== blessing)
+        }
+      })
+    },
+
+    addBlessing(blessing) {
+      this.blessings.push(blessing)
+      let resource = this.resources[blessing.resourceType]
+      resource.perSecond += blessing.perSecond
+
+      useNotificationStore().addNotification({
+        id: crypto.randomUUID(),
+        title: 'Blessing',
+        message: `${blessing.name}`
+      })
+    },
+
     updateResource(resource, dt) {
       if (!resource.unlocked) return
+
+      // update resource per second
       resource.current = Math.min(resource.max, resource.current + resource.perSecond * dt)
+
       this.checkLevelUp(resource)
     },
 
@@ -106,25 +151,44 @@ export const useGameStore = defineStore('gameStore', {
         const dependency = this.resources[resource.unlockedBy.resourceType]
         if (dependency && dependency.unlocked && dependency.level >= resource.unlockedBy.level) {
           resource.unlocked = true
+
+          // useNotificationStore().addNotification({
+          //   id: crypto.randomUUID(),
+          //   title: 'Unlocked',
+          //   message: `${resource.resourceType} is now unlocked!`
+          // })
         }
       }
     },
 
     checkLevelUp(resource) {
       if (resource.current >= resource.max) {
-        resource.level++
-        resource.max *= 1.6
-        // resource.current = 0
 
-        if (resource.resourceType === 'faith') {
-          this.resources.followers.current += 1
+        // have hit resource cap
+        switch (resource.resourceType) {
+          case 'followers':
+            // followers can only level up by purchasing more houses
+            return;
+          case 'faith':
+            // faith causes more followers
+            this.resources.followers.current += 1
+            break;
+          case 'favor':
+            // favor causes a new blessing on level 2+
+            if (resource.level >= 2) {
+              const blessing = new Blessing(
+                'Ka blesses you with +.01 followers per second for 10 seconds',
+                'followers',
+                .01,
+                10
+              )
+              this.addBlessing(blessing)
+            }
+            break;
         }
 
-        useNotificationStore().addNotification({
-          id: crypto.randomUUID(),
-          title: 'Level Up!',
-          message: `${resource.resourceType} reached level ${resource.level}!`
-        })
+        resource.level++
+        resource.max = Math.floor(resource.max * 1.6)
       }
     },
 
@@ -137,9 +201,9 @@ export const useGameStore = defineStore('gameStore', {
     },
 
     triggerAction(resource) {
-      console.log('triggerAction!', resource.resourceType, resource);
+      // console.log('triggerAction!', resource.resourceType, resource);
       if (!resource.unlocked) return
-      resource.current = Math.min(resource.max, resource.current + 1 * resource.level)
+      resource.current = Math.min(resource.max, resource.current + 1) //  * resource.level
       this.checkLevelUp(resource)
     },
 

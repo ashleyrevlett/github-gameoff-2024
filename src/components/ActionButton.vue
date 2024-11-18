@@ -1,6 +1,6 @@
 <template>
     <button
-      class="btn"
+      class="btn w-20"
       @click="callAction"
       :disabled="isOnCooldown"
     >
