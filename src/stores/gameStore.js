@@ -186,6 +186,10 @@ export const useGameStore = defineStore('gameStore', {
       this.checkLevelUp(resource)
     },
 
+    setResource(resource, value) {
+      this.resources[resource].current = Math.max(0, Math.min(this.resources[resource].max, value))
+    },
+
     checkUnlock(resource) {
       if (!resource.unlocked && resource.unlockedBy) {
         const dependency = this.resources[resource.unlockedBy.resourceType]
@@ -202,33 +206,47 @@ export const useGameStore = defineStore('gameStore', {
 
         // have hit resource cap
         switch (resource.resourceType) {
-          case 'followers':
-            // followers can only level up by purchasing more houses
-            return;
-          case 'faith':
-            // faith causes more followers
-            this.resources.followers.current += 1
-            break;
+
           case 'favor':
-            // on favor level 1, grant follower
-            if (resource.level === 0) {
+            // on hitting favor level 1, grant follower
+            // if (resource.level === 0) {
               this.resources.followers.current += 1
               useNotificationStore().addNotification({
                 id: crypto.randomUUID(),
                 title: 'Follower',
-                message: `Ka blesses you with a follower!`
+                message: `You have a new follower!`
               })
-            }
+            // } else if (resource.level === 1) {
+            //   // on hitting favor level 2,
+            //   this.resources.faith.current = this.resources.faith.current + this.resources.faith.max * 0.5
+            //   useNotificationStore().addNotification({
+            //     id: crypto.randomUUID(),
+            //     title: 'Faith',
+            //     message: `Ka blesses you with a full faith bar!`
+            //   })
+            // }
+          case 'faith':
+            // faith causes more followers
+            this.resources.followers.current += 1
+            // if (resource.level === 0) {
+            //     this.setResource('faith', this.resources.faith.max * 0.3)
+            // }
+            break;
+          case 'followers':
+            // followers can only level up by purchasing more houses
+            return;
+
+
             // favor causes a new blessing on level 2+
-            if (resource.level >= 1) {
-              const blessing = new Blessing(
-                'Ka blesses you with +.01 followers per second for 10 seconds',
-                'followers',
-                .01,
-                10
-              )
-              this.addBlessing(blessing)
-            }
+            // if (resource.level >= 1) {
+            //   const blessing = new Blessing(
+            //     'Ka blesses you with +.01 followers per second for 10 seconds',
+            //     'followers',
+            //     .01,
+            //     10
+            //   )
+            //   this.addBlessing(blessing)
+            // }
             break;
         }
 
