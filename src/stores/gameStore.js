@@ -2,6 +2,9 @@ import { reactive } from 'vue';
 import { defineStore } from 'pinia';
 import { useNotificationStore } from './notificationStore';
 
+const SECONDS_PER_DAY = 15;
+const DAYS_PER_GAME = 30;
+
 const GAME_STATES = {
   MENU: 'menu',
   PLAYING: 'playing',
@@ -10,8 +13,40 @@ const GAME_STATES = {
   LOST: 'lost',
 };
 
-const SECONDS_PER_DAY = 15;
-const DAYS_PER_GAME = 30;
+export const PLAYER_ACTIONS = {
+  PRAY: 'pray',
+  PREACH: 'preach',
+  RECRUIT: 'recruit',
+  ANNOIT: 'annoit',
+  TITHE: 'tithe',
+  PERFORM_MIRACLE: 'perform_miracle',
+  BLESS: 'bless'
+}
+
+export const BUILDINGS = {
+  SHRINE: {
+    name: 'Shrine',
+    icon: '🗿',
+    cost: 1,
+    resourceAffected: 'favor',
+    perSecond: 0.01,
+  },
+  TEMPLE: {
+    name: 'Temple',
+    icon: '🏛️',
+    cost: 1,
+    resourceAffected: 'favor',
+    perSecond: 0.01,
+  },
+  HOUSE: {
+    name: 'House',
+    icon: '🏠',
+    cost: 10,
+    resourceAffected: 'followers',
+    perSecond: null,
+    effect: 'followers.max += 1'
+  }
+}
 
 class Blessing {
   constructor(name, resourceType, perSecond, timeRemaining = 0) {
@@ -26,10 +61,9 @@ class Blessing {
   }
 }
 
-// Resource class to replace ResourceComponent
+// attributes and resources
 class Resource {
   constructor(resourceType, current = 0, max = 10, perSecond = 0, level = 1, unlocked = false, unlockedBy = undefined) {
-    // Make all properties reactive using ref or reactive
     const resource = reactive({
       resourceType,
       current,
@@ -39,8 +73,6 @@ class Resource {
       unlocked,
       unlockedBy
     });
-
-    // Return the reactive object
     return resource;
   }
 }
@@ -50,14 +82,9 @@ export const useGameStore = defineStore('gameStore', {
     elapsedTime: 0,
     maxTime: DAYS_PER_GAME * SECONDS_PER_DAY,
     gameState: GAME_STATES.PLAYING,
-    resources: {
-      favor: new Resource('favor', 0, 10, 0, 0, true),
-      faith: new Resource('faith', 0, 10, 0, 1, false, { resourceType: 'favor', level: 2 }),
-      followers: new Resource('followers', 0, 3, 0, 1, false, { resourceType: 'faith', level: 2 }),
-      love: new Resource('love', 0, 10, 0, 1, false, { resourceType: 'followers', level: 1 }),
-      money: new Resource('money', 100.0, 1000000.0, 0, 1, false, { resourceType: 'followers', level: 2 })
-    },
-    blessings: []
+    resources: {},
+    buildings: [],
+    blessings: [],
   }),
 
   getters: {
@@ -68,19 +95,22 @@ export const useGameStore = defineStore('gameStore', {
   },
 
   actions: {
+    initState() {
+      this.resources = {
+        favor: new Resource('favor', 0, 10, 0, 0, true),
+        faith: new Resource('faith', 0, 10, 0, 1, false, { resourceType: 'favor', level: 1 }),
+        followers: new Resource('followers', 0, 3, 0, 1, false, { resourceType: 'favor', level: 1 }),
+        money: new Resource('money', 0, 1000000.0, 0, 1, false, { resourceType: 'faith', level: 2 })
+        // love: new Resource('love', 0, 10, 0, 1, false, { resourceType: 'followers', level: 1 }),
+      }
+    },
+
     startGame() {
       // reset the game state
       this.gameState = GAME_STATES.PLAYING;
       this.elapsedTime = 0;
 
-      Object.values(this.resources).forEach(resource => {
-        resource.current = 0
-        resource.max = 10
-        resource.level = 1
-        resource.perSecond = 0
-        resource.unlocked = false
-      })
-      this.resources.favor.unlocked = true
+      this.initState();
     },
 
     pauseTimer() {
@@ -97,8 +127,11 @@ export const useGameStore = defineStore('gameStore', {
 
       this.elapsedTime += dt
 
-      // process blessings
+      // process blessing updates
       this.updateBlessings(dt)
+
+      // process building updates
+      this.updateBuildings(dt)
 
       // Update all resources
       Object.values(this.resources).forEach(resource => {
@@ -122,6 +155,13 @@ export const useGameStore = defineStore('gameStore', {
           resource.perSecond -= blessing.perSecond
           this.blessings = this.blessings.filter(b => b !== blessing)
         }
+      })
+    },
+
+    updateBuildings(dt) {
+      this.buildings.forEach(building => {
+        // console.log('updateBuilding!', building);
+        this.resources[building.resourceAffected].current += building.perSecond * dt
       })
     },
 
@@ -151,17 +191,13 @@ export const useGameStore = defineStore('gameStore', {
         const dependency = this.resources[resource.unlockedBy.resourceType]
         if (dependency && dependency.unlocked && dependency.level >= resource.unlockedBy.level) {
           resource.unlocked = true
-
-          // useNotificationStore().addNotification({
-          //   id: crypto.randomUUID(),
-          //   title: 'Unlocked',
-          //   message: `${resource.resourceType} is now unlocked!`
-          // })
         }
       }
     },
 
     checkLevelUp(resource) {
+      // this runs when the resource hits the max and will
+      // award a level up
       if (resource.current >= resource.max) {
 
         // have hit resource cap
@@ -174,8 +210,17 @@ export const useGameStore = defineStore('gameStore', {
             this.resources.followers.current += 1
             break;
           case 'favor':
+            // on favor level 1, grant follower
+            if (resource.level === 0) {
+              this.resources.followers.current += 1
+              useNotificationStore().addNotification({
+                id: crypto.randomUUID(),
+                title: 'Follower',
+                message: `Ka blesses you with a follower!`
+              })
+            }
             // favor causes a new blessing on level 2+
-            if (resource.level >= 2) {
+            if (resource.level >= 1) {
               const blessing = new Blessing(
                 'Ka blesses you with +.01 followers per second for 10 seconds',
                 'followers',
@@ -188,7 +233,7 @@ export const useGameStore = defineStore('gameStore', {
         }
 
         resource.level++
-        resource.max = Math.floor(resource.max * 1.6)
+        resource.max = Math.floor(resource.max * 2)
       }
     },
 
@@ -200,12 +245,67 @@ export const useGameStore = defineStore('gameStore', {
       }
     },
 
-    triggerAction(resource) {
+    triggerAction(resource, amount = 1) {
       // console.log('triggerAction!', resource.resourceType, resource);
       if (!resource.unlocked) return
-      resource.current = Math.min(resource.max, resource.current + 1) //  * resource.level
+      resource.current = Math.min(resource.max, resource.current + amount) //  * resource.level
       this.checkLevelUp(resource)
     },
 
+    performAction(action) {
+      console.log('performAction!', action);
+
+      switch (action) {
+        case PLAYER_ACTIONS.PRAY:
+          this.triggerAction(this.resources.favor, 1)
+          break;
+        case PLAYER_ACTIONS.PREACH:
+          this.triggerAction(this.resources.faith, 1)
+          break;
+        // case PLAYER_ACTIONS.RECRUIT:
+        //   this.triggerAction(this.resources.followers)
+        //   break;
+        // case PLAYER_ACTIONS.ANNOIT:
+        //   this.triggerAction(this.resources.priests)
+        //   break;
+      }
+    },
+
+    build(buildingType) {
+      console.log('build!', buildingType);
+
+      switch (buildingType) {
+        case 'shrine':
+          if (this.resources.money.current >= BUILDINGS.SHRINE.cost) {
+            this.resources.money.current -= BUILDINGS.SHRINE.cost
+            this.buildings.push(BUILDINGS.SHRINE)
+          }
+          break;
+        case 'temple':
+          if (this.resources.money.current >= BUILDINGS.TEMPLE.cost) {
+            this.resources.money.current -= BUILDINGS.TEMPLE.cost
+            this.buildings.push(BUILDINGS.TEMPLE)
+          }
+          break;
+        case 'house':
+          if (this.resources.money.current >= BUILDINGS.HOUSE.cost) {
+            this.resources.money.current -= BUILDINGS.HOUSE.cost
+            this.resources.followers.current += BUILDINGS.HOUSE.currentChange
+            this.buildings.push(BUILDINGS.HOUSE)
+          }
+          break;
+        default:
+          console.log('unknown building type', buildingType);
+      }
+    },
+
+    tithe() {
+      console.log('tithe!');
+      if (this.resources.faith.current < 10) return
+
+      this.resources.faith.current -= 10
+      this.resources.money.current += 10 * this.resources.followers.current
+    }
   }
+
 });

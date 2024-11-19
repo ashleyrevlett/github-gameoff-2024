@@ -18,6 +18,10 @@ h1, h2, h3, h4 {
   margin: 0.5rem 0;
 }
 
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
 .btn {
   @apply bg-white text-black border border-black px-3 py-1;
 }

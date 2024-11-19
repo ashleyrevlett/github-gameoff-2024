@@ -5,6 +5,40 @@
       <Stats />
     </header>
 
+    <section class="gap-3">
+      <BuildingButton
+        v-if="gameStore.resources.faith.level > 1"
+        :building="BUILDINGS.SHRINE"
+        :actionCallback="() => gameStore.build('shrine')"
+        :money="gameStore.resources.money?.current"
+      />
+      <BuildingButton
+        v-if="gameStore.resources.faith.level > 2"
+        :building="BUILDINGS.TEMPLE"
+        :actionCallback="() => gameStore.build('temple')"
+        :money="gameStore.resources.money?.current"
+      />
+      <BuildingButton
+        v-if="gameStore.resources.followers.current >= 3"
+        :building="BUILDINGS.HOUSE"
+        :actionCallback="() => gameStore.build('house')"
+        :money="gameStore.resources.money?.current"
+      />
+
+      <div
+        v-if="gameStore.resources.money.unlocked >= 1"
+        class="flex flex-row gap-3 items-center mb-3"
+      >
+        <button class="btn" @click="gameStore.tithe()" :disabled="gameStore.resources.faith.current < 10">Tithe (10 faith)</button>
+      </div>
+
+      <ul>
+        <li v-for="(building, index) in gameStore.buildings" :key="index">
+          {{ building.icon }} <span v-if="building.perSecond" class="text-xs text-gray-500">+{{ building.perSecond.toFixed(2) }}/s {{ building.resourceAffected }}</span>
+        </li>
+      </ul>
+    </section>
+
     <footer class="w-auto max-w-[150px] mt-auto flex flex-row gap-3">
       <button @click="gameStore.pauseTimer" class="btn flex-1">Pause</button>
     </footer>
@@ -24,11 +58,12 @@
 
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, onBeforeMount} from 'vue';
 import Stats from '../components/Stats.vue';
 import Notifications from '../components/Notifications.vue';
+import BuildingButton from '../components/BuildingButton.vue';
 
-import { useGameStore } from '../stores/gameStore';
+import { useGameStore, BUILDINGS } from '../stores/gameStore';
 const gameStore = useGameStore()
 
 let lastTime = performance.now()
@@ -42,8 +77,11 @@ function onTick() {
   animationFrameId = requestAnimationFrame(onTick) // Request next frame
 }
 
-onMounted(() => {
+onBeforeMount(() => {
   gameStore.startGame()
+})
+
+onMounted(() => {
   animationFrameId = requestAnimationFrame(onTick) // Start animation loop
 })
 

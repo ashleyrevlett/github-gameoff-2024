@@ -14,9 +14,9 @@
     <ProgressBar :percentage="percentage" />
     <div class="ml-auto w-28 text-sm text-right">
       {{ label }} <span class="text-xs">Lvl {{ resource.level }}</span>
-      <br />{{ Math.floor(resource.current).toLocaleString() }} / {{ resource.max.toLocaleString() }}
+      <br />{{ resource.current }} / {{ resource.max.toLocaleString() }}
       <span v-if="resource.perSecond" class="text-xs block">
-        (<span v-if="resource.perSecond > 0">+</span>{{ resource.perSecond.toFixed(1) }}/s)
+        (<span v-if="resource.perSecond > 0">+</span>{{ resource.perSecond.toFixed(2) }}/s)
       </span>
     </div>
   </div>

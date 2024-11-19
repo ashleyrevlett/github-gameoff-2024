@@ -3,11 +3,10 @@
     <p>{{ gameStore.daysRemaining }} Days Left</p>
     <p class="text-right">
       <Transition name="fade">
-        <div v-if="followers?.unlocked">
-          {{ followers?.current.toFixed(2) }} / {{ followers?.max }} Followers
-          <div class="text-xs text-gray-500">Lvl ({{ followers?.level }})</div>
-          <div class="text-xs text-gray-500">
-            <span v-if="followers?.perSecond > 0">+{{ followers?.perSecond.toFixed(2) }}/sec</span><span v-else>&nbsp;</span>
+        <div>
+          {{ Math.round(followers?.current) }} / {{ followers?.max }} Followers
+          <div class="text-xs text-gray-500" v-if="followers?.perSecond > 0">
+            <span>+{{ followers?.perSecond.toFixed(2) }}/sec</span>
           </div>
           <span v-if="followerBlessings.length > 0">
             <p v-for="(blessing, index) in followerBlessings" class="text-xs text-gray-500" :key="index">
@@ -25,23 +24,23 @@
       label="Favor"
       :resource="favor"
       actionLabel="Pray"
-      :action="() => gameStore.triggerAction(favor)"
+      :action="() => gameStore.performAction(PLAYER_ACTIONS.PRAY)"
       :cooldown="0.1"
     />
     <StatBar
       label="Faith"
       :resource="faith"
       actionLabel="Preach"
-      :action="() => gameStore.triggerAction(faith)"
+      :action="() => gameStore.performAction(PLAYER_ACTIONS.PREACH)"
       :cooldown="0.1"
     />
-    <StatBar
+    <!-- <StatBar
       label="Love"
       :resource="love"
       actionLabel="Bless"
       :action="() => gameStore.triggerAction(love)"
       :cooldown="1"
-    />
+    /> -->
   </div>
 
 </template>
@@ -49,7 +48,7 @@
 <script setup>
 import { computed } from 'vue';
 import StatBar from '@/components/StatBar.vue';
-import { useGameStore } from '@/stores/gameStore';
+import { useGameStore, PLAYER_ACTIONS } from '@/stores/gameStore';
 
 const gameStore = useGameStore();
 const favor = computed(() => gameStore.resources.favor);
