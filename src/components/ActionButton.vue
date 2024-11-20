@@ -1,10 +1,13 @@
 <template>
     <button
-      class="btn w-20"
+      class="btn min-w-20"
       @click="callAction"
       :disabled="isOnCooldown"
     >
-      {{ actionLabel }}
+      <div class="flex flex-row gap-1 items-center">
+        <div>{{ actionLabel }}</div>
+        <slot></slot>
+      </div>
       <div
         v-if="isOnCooldown"
         class="cooldown-overlay"
@@ -68,7 +71,7 @@ const callAction = () => {
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
   animation: cooldown-progress linear;
   width: 100%;
 }

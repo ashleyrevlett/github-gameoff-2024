@@ -12,14 +12,17 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    percentage: {
-      type: Number,
+<script setup>
+import { computed } from 'vue';
+
+const props = defineProps({
+  resource: {
+      type: Object,
       required: true,
-      validator: (value) => value >= 0 && value <= 100
-    }
   }
-}
+});
+
+const percentage = computed(() => {
+  return props.resource.current / props.resource.max * 100;
+});
 </script>
