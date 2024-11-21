@@ -106,7 +106,7 @@ const moneyDisplay = computed(() => {
 
 <style scoped>
 main {
-  @apply p-4 flex gap-4 w-full min-h-screen flex-col md:flex-row;
+  @apply p-4 flex gap-4 w-full min-h-screen flex-col;
 }
 
 .stat-section {
