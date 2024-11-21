@@ -4,18 +4,26 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
+  /* font-family: system-ui; */
+  font-family: monospace;
+  font-weight: 400;
+  font-size: 14px;
   margin: 0;
   padding: 0;
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 
 h1, h2, h3, h4 {
   margin: 0.5rem 0;
 }
 
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
 .btn {
-  @apply bg-blue-500 text-white px-4 py-2 rounded;
+  @apply bg-white text-black border border-black px-3 py-1;
 }
 
 .btn-green {
@@ -24,6 +32,10 @@ h1, h2, h3, h4 {
 
 .btn-red {
 @apply bg-red-500;
+}
+
+.btn-sm {
+  @apply text-sm px-2 py-1;
 }
 
 button:disabled {
@@ -53,4 +65,76 @@ button:disabled {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* Slide Right animation */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);  /* Changed from 'ease' to cubic-bezier */
+  position: absolute;
+  width: 100%;
+}
+
+.slide-right-enter-from {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slide-right-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-right-enter-to,
+.slide-right-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Slide Left animation */
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.3s ease;
+  position: absolute;
+  width: 100%;
+}
+
+.slide-left-enter-from {
+  transform: translateX(100%);  /* Enter from right */
+  opacity: 0;
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100%);  /* Exit to left */
+  opacity: 0;
+}
+
+.slide-left-enter-to,
+.slide-left-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Fade Slide Down animation */
+.fade-slide-down-enter-active,
+.fade-slide-down-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  width: 100%;
+}
+
+.fade-slide-down-enter-from {
+  transform: translateY(-60px);  /* Start slightly above */
+  opacity: 0;
+}
+
+.fade-slide-down-leave-to {
+  transform: translateY(60px);   /* Exit slightly downward */
+  opacity: 0;
+}
+
+.fade-slide-down-enter-to,
+.fade-slide-down-leave-from {
+  transform: translateY(0);
+  opacity: 1;
 }

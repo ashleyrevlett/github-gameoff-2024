@@ -1,8 +1,12 @@
 <template>
-  <div class="notification flex items-center justify-center gap-3 @apply bg-yellow-200 p-4 border-b border-black">
-    <div v-html="message"></div>
-    <button class="btn p-1 text-xs ml-auto" @click="closeNotification">OK</button>
+  <transition name="fade">
+    <div class="notification w-full flex items-center justify-center gap-3 @apply bg-yellow-200 p-4">
+      <div>
+        <span class="font-bold">{{ notification.title }}</span>: <span v-html="notification.message"></span>
+      </div>
+      <button class="btn p-1 text-xs ml-auto" @click="closeNotification">OK</button>
     </div>
+  </transition>
 </template>
 
 <script setup>
@@ -12,14 +16,6 @@ const notificationStore = useNotificationStore();
 
 const props = defineProps({
     notification: Object,
-});
-
-const message = computed(() => {
-  if (props.notification.notificationType === 'eventExpired') {
-    return `You failed to respond to ${props.notification.object.sender.name}'s message in time.`;
-  } else {
-    return props.notification.object.resolution?.message;
-  }
 });
 
 function closeNotification() {
