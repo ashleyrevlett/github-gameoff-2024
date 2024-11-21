@@ -20,7 +20,7 @@
     <div class="text-xs flex flex-row items-center w-100">
       <div>
         <span v-if="gameObject.perSecond > 0">
-          +{{ gameObject.perSecond }} {{ gameObject.resourceAffected }}/sec
+          +{{ gameObject.perSecond }} {{ gameObject.resourceAffected }}/s
         </span>
         <span v-else-if="gameObject.oneTimeAmount > 0">
           <span v-if="gameObject.name === 'Tithe'">

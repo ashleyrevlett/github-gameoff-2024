@@ -1,26 +1,23 @@
 <template>
   <main v-if="gameStore.isPlaying" class="">
     <header>
-      <div class="flex justify-between items-start mb-1">
-        <p>{{ gameStore.daysRemaining }} Days Left</p>
-      </div>
-
-      <div id="money" class="stat-section">
-        <span class="block text-lg">${{ moneyDisplay }}</span>
-        <span v-if="gameStore.resources.money.perSecond > 0" class="text-xs text-gray-500">+${{ gameStore.resources.money.perSecond.toFixed(2) }}/s</span>
-        <span v-else>&nbsp;</span>
+      <div class="mb-5 text-center">
+        <p class="text-red-500 font-bold">{{ gameStore.daysRemaining }} Days Left</p>
       </div>
 
       <div id="followers" class="stat-section">
-          <span class="block text-lg">{{ Math.floor(gameStore.resources.followers.current) }} Followers</span>
-          <span v-if="gameStore.resources.followers.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.followers.perSecond.toFixed(2) }}/s</span>
-          <span v-else>&nbsp;</span>
+        <span class="block text-xl">{{ Math.floor(gameStore.resources.followers.current) }} Followers</span>
+        <span v-if="gameStore.resources.followers.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.followers.perSecond.toFixed(2) }}/s</span>
       </div>
 
+      <div id="money" class="stat-section">
+        <span class="block text-base">${{ moneyDisplay }}</span>
+        <span v-if="gameStore.resources.money.perSecond > 0" class="text-xs text-gray-500">+${{ gameStore.resources.money.perSecond.toFixed(2) }}/follower</span>
+      </div>
       <div class="flex justify-evenly items-end mb-1">
-        <p class="text-left flex-1">Faith <span v-if="gameStore.resources.faith.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.faith.perSecond.toFixed(2) }}/s</span></p>
+        <p class="text-left flex-1">Faith <span v-if="gameStore.resources.faith.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.faith.perSecond }}/s</span></p>
         <p class="text-right flex-1">
-          <span class="inline-block mr-4 text-gray-500 text-xs">{{ gameStore.resources.faith.current.toFixed(2) }}/{{ gameStore.resources.faith.max }}</span>
+          <span class="inline-block mr-4 text-gray-500 text-xs">{{ Math.round(gameStore.resources.faith.current).toLocaleString() }}/{{ Math.round(gameStore.resources.faith.max).toLocaleString() }}</span>
           <span class="inline-block">Lvl {{ gameStore.resources.faith.level }}</span>
         </p>
       </div>
@@ -29,10 +26,8 @@
 
     <section class="my-5 gap-3 flex flex-col">
       <PlayerAction :gameObject="PLAYER_ACTIONS.PRAY" :action="() => gameStore.pray()" />
-      <PlayerAction :gameObject="PLAYER_ACTIONS.PREACH" :action="() => gameStore.preach()" />
+      <!-- <PlayerAction :gameObject="PLAYER_ACTIONS.PREACH" :action="() => gameStore.preach()" /> -->
       <PlayerAction :gameObject="PLAYER_ACTIONS.TITHE" :action="() => gameStore.tithe()" />
-
-      <h3 v-if="gameStore.resources.faith.level >= 2" class="text-xs uppercase tracking-widest mb-0 mt-3">Build</h3>
       <PlayerAction
         v-for="building in BUILDINGS"
         :key="building.name"
@@ -115,6 +110,6 @@ main {
 }
 
 .stat-section {
-  @apply text-center mb-4 leading-tight;
+  @apply mb-4 leading-none flex flex-col text-center;
 }
 </style>
