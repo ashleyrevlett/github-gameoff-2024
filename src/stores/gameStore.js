@@ -101,7 +101,7 @@ export const useGameStore = defineStore('gameStore', {
 
       // money and faith are affected by followers
       if (resource.resourceType === 'money') {
-        console.log('money rps', this.resources.money.current, this.resources.followers.current);
+        // console.log('money rps', this.resources.money.current, this.resources.followers.current);
         resource.perSecond = Math.floor(this.resources.followers.current) * 0.1;
       }
 
