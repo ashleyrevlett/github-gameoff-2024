@@ -3,34 +3,36 @@
     <header>
       <div class="flex justify-between items-start mb-1">
         <p>{{ gameStore.daysRemaining }} Days Left</p>
-        <p class="ml-auto text-right">
-          <span>${{ moneyDisplay }}</span>
-          <span
-            v-if="gameStore.resources.money.perSecond > 0"
-            class="text-xs text-gray-500 block"
-          >
-            +{{ gameStore.resources.money.perSecond.toFixed(2) }}/s
-          </span>
-          <span v-else class="text-xsblock">&nbsp;</span>
-        </p>
       </div>
-      <div class="flex justify-evenly items-end mb-1">
-        <p class="text-left flex-1">Faith <span v-if="gameStore.resources.faith.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.faith.perSecond.toFixed(2) }}/s</span></p>
-        <p class="text-center">
-          <span class="block text-lg">{{ Math.round(gameStore.resources.followers.current.toLocaleString()) }} Followers</span>
+
+      <div id="money" class="stat-section">
+        <span class="block text-lg">${{ moneyDisplay }}</span>
+        <span v-if="gameStore.resources.money.perSecond > 0" class="text-xs text-gray-500">+${{ gameStore.resources.money.perSecond.toFixed(2) }}/s</span>
+        <span v-else>&nbsp;</span>
+      </div>
+
+      <div id="followers" class="stat-section">
+          <span class="block text-lg">{{ Math.floor(gameStore.resources.followers.current) }} Followers</span>
           <span v-if="gameStore.resources.followers.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.followers.perSecond.toFixed(2) }}/s</span>
           <span v-else>&nbsp;</span>
+      </div>
+
+      <div class="flex justify-evenly items-end mb-1">
+        <p class="text-left flex-1">Faith <span v-if="gameStore.resources.faith.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.faith.perSecond.toFixed(2) }}/s</span></p>
+        <p class="text-right flex-1">
+          <span class="inline-block mr-4 text-gray-500 text-xs">{{ gameStore.resources.faith.current.toFixed(2) }}/{{ gameStore.resources.faith.max }}</span>
+          <span class="inline-block">Lvl {{ gameStore.resources.faith.level }}</span>
         </p>
-        <p class="text-right flex-1">Lvl {{ gameStore.resources.faith.level }}</p>
       </div>
       <ProgressBar :resource="gameStore.resources.faith" />
     </header>
 
     <section class="my-5 gap-3 flex flex-col">
+      <PlayerAction :gameObject="PLAYER_ACTIONS.PRAY" :action="() => gameStore.pray()" />
       <PlayerAction :gameObject="PLAYER_ACTIONS.PREACH" :action="() => gameStore.preach()" />
       <PlayerAction :gameObject="PLAYER_ACTIONS.TITHE" :action="() => gameStore.tithe()" />
 
-      <h3 v-if="gameStore.resources.faith.level >= 2" class="text-xs uppercase tracking-widest mb-0 mt-3">Buildings</h3>
+      <h3 v-if="gameStore.resources.faith.level >= 2" class="text-xs uppercase tracking-widest mb-0 mt-3">Build</h3>
       <PlayerAction
         v-for="building in BUILDINGS"
         :key="building.name"
@@ -68,21 +70,24 @@
 
 <script setup>
 import { onMounted, onUnmounted, onBeforeMount, computed } from 'vue';
-import ProgressBar from '../components/ProgressBar.vue';
-import PlayerAction from '../components/PlayerAction.vue';
+import ProgressBar from '@/components/ProgressBar.vue';
+import PlayerAction from '@/components/PlayerAction.vue';
 
-import { useGameStore, BUILDINGS, PLAYER_ACTIONS } from '../stores/gameStore';
+import { BUILDINGS, PLAYER_ACTIONS } from '@/constants/game';
+import { useGameStore } from '@/stores/gameStore';
 const gameStore = useGameStore()
 
+// let animationFrameId;
+let intervalId; // Changed from animationFrameId
 let lastTime = performance.now()
-let animationFrameId;
 
 function onTick() {
   const currentTime = performance.now()
   const dt = (currentTime - lastTime) / 1000
   lastTime = currentTime
   gameStore.update(dt)
-  animationFrameId = requestAnimationFrame(onTick) // Request next frame
+  // animationFrameId = requestAnimationFrame(onTick) // Request next frame
+
 }
 
 onBeforeMount(() => {
@@ -90,11 +95,13 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  animationFrameId = requestAnimationFrame(onTick) // Start animation loop
+  // animationFrameId = requestAnimationFrame(onTick) // Start animation loop
+  intervalId = setInterval(onTick, 1000)
 })
 
 onUnmounted(() => {
-  if (animationFrameId) cancelAnimationFrame(animationFrameId); // Clean up
+  // if (animationFrameId) cancelAnimationFrame(animationFrameId); // Clean up
+  if (intervalId) clearInterval(intervalId)
 })
 
 const moneyDisplay = computed(() => {
@@ -105,5 +112,9 @@ const moneyDisplay = computed(() => {
 <style scoped>
 main {
   @apply p-4 flex gap-4 w-full min-h-screen flex-col md:flex-row;
+}
+
+.stat-section {
+  @apply text-center mb-4 leading-tight;
 }
 </style>

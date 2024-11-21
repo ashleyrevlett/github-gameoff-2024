@@ -1,123 +1,13 @@
 import { reactive } from 'vue';
 import { defineStore } from 'pinia';
-
-const SECONDS_PER_DAY = 15;
-const DAYS_PER_GAME = 30;
-const SCALE_FACTOR = 3; // how much to increase the max of a resource when it levels up
-
-const GAME_STATES = {
-  MENU: 'menu',
-  PLAYING: 'playing',
-  PAUSED: 'paused',
-  WON: 'won',
-  LOST: 'lost',
-};
-
-export const PLAYER_ACTIONS = {
-  PREACH: {
-    name: 'Preach',
-    icon: '🙏',
-    cost: 0,
-    currency: null,
-    resourceAffected: 'faith',
-    perSecond: 0,
-    oneTimeAmount: 1,
-    followerMultiplier: 1,
-    faithLevelRequired: 0,
-    cooldown: 0.1,
-  },
-  TITHE: {
-    name: 'Tithe',
-    icon: '💰',
-    cost: 1,
-    currency: 'faith',
-    resourceAffected: 'money',
-    perSecond: 0,
-    oneTimeAmount: .1,
-    followerMultiplier: 1,
-    faithLevelRequired: 4,
-    cooldown: .1,
-  },
-}
-
-export const BUILDINGS = {
-  TALISMAN: {
-    name: 'Talisman',
-    icon: '🔮',
-    cost: .25,
-    currency: 'money',
-    resourceAffected: 'faith',
-    perSecond: 0.25,
-    faithLevelRequired: 2,
-    cooldown: .5,
-  },
-  SHRINE: {
-    name: 'Shrine',
-    icon: '🗿',
-    cost: .50,
-    currency: 'money',
-    resourceAffected: 'faith',
-    perSecond: 0.5,
-    faithLevelRequired: 3,
-    cooldown: .5,
-  },
-  TEMPLE: {
-    name: 'Temple',
-    icon: '🏛️',
-    cost: 3,
-    currency: 'money',
-    resourceAffected: 'faith',
-    perSecond: 2.5,
-    faithLevelRequired: 4,
-    cooldown: 1,
-  },
-  RECRUITER_OFFICE: {
-    name: 'Recruiter Office',
-    icon: '👥',
-    cost: 7,
-    currency: 'money',
-    resourceAffected: 'followers',
-    perSecond: 0.1,
-    faithLevelRequired: 5,
-    cooldown: 10,
-  },
-  TREASURY: {
-    name: 'Treasury',
-    icon: '🏦',
-    cost: 10,
-    currency: 'money',
-    resourceAffected: 'money',
-    perSecond: 0.1,
-    faithLevelRequired: 6,
-    cooldown: 10,
-  },
-  MONUMENT: {
-    name: 'Monument',
-    icon: '🗼',
-    cost: 5,
-    currency: 'money',
-    resourceAffected: 'faith',
-    perSecond: 20,
-    faithLevelRequired: 7,
-    cooldown: 5,
-  },
-}
-
-// more buildings:
-// Library, Meeting Hall, Bunkhouse, Farm, Idol, ...
-
-// class Blessing {
-//   constructor(name, resourceType, perSecond, timeRemaining = 0) {
-//     const blessing = reactive({
-//       name,
-//       resourceType,
-//       perSecond,
-//       timeRemaining
-//     })
-
-//     return blessing
-//   }
-// }
+import {
+  BUILDINGS,
+  PLAYER_ACTIONS,
+  GAME_STATES,
+  SECONDS_PER_DAY,
+  DAYS_PER_GAME,
+  SCALE_FACTOR
+} from '@/constants/game';
 
 // attributes and resources
 class Resource {
@@ -211,7 +101,8 @@ export const useGameStore = defineStore('gameStore', {
 
       // money and faith are affected by followers
       if (resource.resourceType === 'money') {
-        resource.perSecond = this.resources.followers.current * 0.1;
+        console.log('money rps', this.resources.money.current, this.resources.followers.current);
+        resource.perSecond = Math.floor(this.resources.followers.current) * 0.1;
       }
 
       // loop through all buildings and add the perSecond value if it exists
@@ -255,10 +146,18 @@ export const useGameStore = defineStore('gameStore', {
       }
     },
 
+    pray() {
+      console.log('pray!');
+      const prayAmount = PLAYER_ACTIONS.PRAY.oneTimeAmount
+      this.setResourceCurrent(this.resources.faith, this.resources.faith.current + prayAmount)
+    },
+
     preach() {
       console.log('preach!');
-      const preachAmount = PLAYER_ACTIONS.PREACH.oneTimeAmount * Math.max(1, this.resources.followers.current)
-      this.setResourceCurrent(this.resources.faith, this.resources.faith.current + preachAmount)
+      // const preachAmount = PLAYER_ACTIONS.PREACH.oneTimeAmount * Math.max(1, this.resources.followers.current)
+      // // this.setResourceCurrent(this.resources.faith, this.resources.faith.current + preachAmount)
+      this.buildings.push(PLAYER_ACTIONS.PREACH)
+      console.log(this.buildings);
     },
 
     tithe() {
