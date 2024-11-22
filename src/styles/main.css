@@ -24,12 +24,9 @@ button:disabled {
 
 .btn {
   @apply bg-white text-black border border-black px-3 py-1 transition-colors;
+  transition-duration: 0.15s;
 
-  &:hover {
-    @apply bg-blue-100;
-  }
-
-  &:active {
+  &.active {
     @apply bg-black text-white;
   }
 }

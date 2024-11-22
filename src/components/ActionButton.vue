@@ -1,5 +1,6 @@
 <template>
     <button
+      ref="actionButton"
       class="btn min-w-20"
       @click="callAction"
       :disabled="isOnCooldown"
@@ -32,11 +33,17 @@ const props = defineProps({
 const timer = ref(null);
 const isOnCooldown = ref(false);
 const cooldownRemaining = ref(0);
+const actionButton = ref(null);
 
 const callAction = () => {
   if (isOnCooldown.value) return;
 
   props.action();
+  actionButton.value.classList.add('active');
+  setTimeout(() => {
+    actionButton.value.classList.remove('active');
+  }, 200)
+
   if (props.cooldown > 0) {
     isOnCooldown.value = true;
     cooldownRemaining.value = props.cooldown;

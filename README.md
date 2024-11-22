@@ -143,3 +143,25 @@ Other actions:
 - Perform Miracle
 - Bless
 
+
+what gives money? you have to choose to tax followers, which costs faith
+
+
+
+----
+
+
+faith => followers => money => scrutiny
+
+rewards with a value that's a function of the log of your resource's level
+
+
+base log 2:
+𝑙𝑜𝑔𝑎(𝑦) = x
+𝑎^𝑥 = y
+
+natural log:
+f(x) = 𝑙𝑜𝑔 base 𝑒 𝑥
+
+
+

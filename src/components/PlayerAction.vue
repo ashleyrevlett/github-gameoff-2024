@@ -32,8 +32,11 @@
         </span>
       </div>
     </div>
-    <div class="ml-auto text-right text-xs relative flex items-center justify-center gap-2">
-      <div v-if="buildingCount">x{{ buildingCount }}</div>
+    <div
+      class="ml-auto text-right text-xs relative flex items-center justify-center gap-2"
+      :class="{ 'invisible': !buildingCount }"
+      >
+      <div>x{{ buildingCount }}</div>
       <div class="relative w-6 h-6">
         <span ref="actionIcon" class="action-icon">{{ gameObject.icon }}</span>
       </div>
@@ -42,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import ActionButton from './ActionButton.vue'
 import { useGameStore } from '@/stores/gameStore'
 
@@ -56,12 +59,10 @@ const props = defineProps({
   action: {
     type: Function,
     required: true
-  },
-  buildingCount: {
-    type: Number,
-    required: false
   }
 })
+
+const buildingCount = computed(() => gameStore.buildings.filter(b => b.name === props.gameObject.name).length)
 
 // action icon animation
 const actionIcon = ref(null)

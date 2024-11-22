@@ -1,7 +1,6 @@
 import { reactive } from 'vue';
 import { defineStore } from 'pinia';
 import {
-  BUILDINGS,
   PLAYER_ACTIONS,
   GAME_STATES,
   SECONDS_PER_DAY,
@@ -64,6 +63,10 @@ export const useGameStore = defineStore('gameStore', {
       console.log('prestige!');
       this.prestigeCount += 1;
       this.elapsedTime = 0;
+      this.buildings = [];
+      Object.values(this.resources).forEach(resource => {
+        resource.perSecond = 0;
+      });
       this.gameState = GAME_STATES.PLAYING;
     },
 
@@ -81,52 +84,30 @@ export const useGameStore = defineStore('gameStore', {
 
       this.elapsedTime += dt
 
-      // Update all resources
+      // Update all resources w/ persecond values
       Object.values(this.resources).forEach(resource => {
-          this.setResourcePerSecond(resource)
-          this.setResourceCurrent(resource, resource.current + resource.perSecond * dt)
+          this.setResourceCurrent(resource, resource.current + (resource.perSecond * dt))
           this.checkLevelUp(resource)
           this.checkWinLose()
       })
     },
 
     setResourceCurrent(resource, value) {
+      // resource should be a ref to gameStore.resources[resourceType]
       resource.current = Math.max(0, Math.min(resource.max, value))
       this.checkLevelUp(resource)
-    },
-
-    setResourcePerSecond(resource) {
-      // reset the perSecond value
-      resource.perSecond = 0;
-
-      // money and faith are affected by followers
-      if (resource.resourceType === 'money') {
-        // console.log('money rps', this.resources.money.current, this.resources.followers.current);
-        resource.perSecond = Math.floor(this.resources.followers.current) * 0.1;
-      }
-
-      // loop through all buildings and add the perSecond value if it exists
-      const resourceBuildings = this.buildings.filter(building => building.resourceAffected === resource.resourceType)
-      resourceBuildings.forEach(building => {
-        if (building.perSecond) {
-          resource.perSecond += building.perSecond;
-        }
-      });
     },
 
     checkLevelUp(resource) {
       // this runs when the resource hits the max and award a level up
       if (resource.current >= resource.max) {
-        switch (resource.resourceType) {
-          case 'faith':
-            // faith causes more followers
-            this.resources.followers.current += 1
-            break;
-          case 'followers':
-            // followers can only level up by purchasing more houses
-            return;
-        }
         resource.level++
+
+        // set new max for this level using log algorithm
+        const x = resource.level
+        const base = Math.E
+        const scale = SCALE_FACTOR
+        const newMax = Math.ceil(scale * Math.log(x + 1) / Math.log(base) + 1)
         resource.max = Math.floor(resource.max * SCALE_FACTOR)
       }
     },
@@ -137,36 +118,48 @@ export const useGameStore = defineStore('gameStore', {
       }
     },
 
-    build(building) {
-      // @param building {Object} - the building to build
-      console.log('build!', building.name);
-      if (this.resources.money.current >= building.cost) {
-        this.setResourceCurrent(this.resources.money, this.resources.money.current - building.cost)
-        this.buildings.push(building)
+    doAction(actionName) {
+      const actionKey = actionName.toUpperCase().replace(/ /g, '_')
+      const action = PLAYER_ACTIONS[actionKey]
+      if (!action) {
+        console.log('action not found', actionName);
+        return;
+      }
+
+      // check if the player has enough of the required currency
+      // if it's free, price and currency should be null
+      const price = action.cost
+      const bank = this.resources[action.currency] ? this.resources[action.currency].current : null;
+      if (!price || !bank || bank >= price) {
+        const resource = this.resources[action.resourceAffected]
+        const currencyResource = this.resources[action.currency]
+
+        // apply cost if any
+        if (bank) {
+          this.setResourceCurrent(currencyResource, currencyResource.current - price)
+        }
+
+        // calculate any multipliers
+        const followerMultiplier = action.followerMultiplier ? this.resources.followers.current * action.followerMultiplier : 1
+
+        // apply perSecond or oneTimeAmount
+        if (action.perSecond != 0) {
+          const amount = action.perSecond * followerMultiplier
+          // console.log('setting resource persecond', resource, amount);
+          resource.perSecond += amount
+        } else if (action.oneTimeAmount != 0) {
+          const amount = action.oneTimeAmount * followerMultiplier
+          // console.log('setting resource', resource, amount);
+          this.setResourceCurrent(resource, resource.current + amount)
+        }
+
+        // add building if it's a building
+        if (action.isBuilding) {
+          this.buildings.push(action)
+        }
       }
     },
 
-    pray() {
-      console.log('pray!');
-      const prayAmount = PLAYER_ACTIONS.PRAY.oneTimeAmount
-      this.setResourceCurrent(this.resources.faith, this.resources.faith.current + prayAmount)
-    },
-
-    preach() {
-      console.log('preach!');
-      // const preachAmount = PLAYER_ACTIONS.PREACH.oneTimeAmount * Math.max(1, this.resources.followers.current)
-      // // this.setResourceCurrent(this.resources.faith, this.resources.faith.current + preachAmount)
-      this.buildings.push(PLAYER_ACTIONS.PREACH)
-      console.log(this.buildings);
-    },
-
-    tithe() {
-      console.log('tithe!');
-      const titheCost = 1 * this.resources.followers.current * PLAYER_ACTIONS.TITHE.cost
-      const titheAmount = PLAYER_ACTIONS.TITHE.oneTimeAmount * this.resources.followers.current
-      this.setResourceCurrent(this.resources[PLAYER_ACTIONS.TITHE.currency], this.resources[PLAYER_ACTIONS.TITHE.currency].current - titheCost)
-      this.setResourceCurrent(this.resources[PLAYER_ACTIONS.TITHE.resourceAffected], this.resources[PLAYER_ACTIONS.TITHE.resourceAffected].current + titheAmount)
-    }
   }
 
 });

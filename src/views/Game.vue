@@ -5,36 +5,44 @@
         <p class="text-red-500 font-bold">{{ gameStore.daysRemaining }} Days Left</p>
       </div>
 
-      <div id="followers" class="stat-section">
-        <span class="block text-xl">{{ Math.floor(gameStore.resources.followers.current) }} Followers</span>
-        <span v-if="gameStore.resources.followers.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.followers.perSecond.toFixed(2) }}/s</span>
-      </div>
+      <TransitionGroup name="fade">
+        <div v-if="gameStore.resources.followers.current > 0" id="followers" class="stat-section">
+          <span class="block text-xl">{{ Math.floor(gameStore.resources.followers.current) }} Followers</span>
+          <span v-if="gameStore.resources.followers.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.followers.perSecond.toFixed(2) }}/s</span>
+        </div>
 
-      <div id="money" class="stat-section">
-        <span class="block text-base">${{ moneyDisplay }}</span>
-        <span v-if="gameStore.resources.money.perSecond > 0" class="text-xs text-gray-500">+${{ gameStore.resources.money.perSecond.toFixed(2) }}/follower</span>
-      </div>
-      <div class="flex justify-evenly items-end mb-1">
-        <p class="text-left flex-1">Faith <span v-if="gameStore.resources.faith.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.faith.perSecond }}/s</span></p>
-        <p class="text-right flex-1">
-          <span class="inline-block mr-4 text-gray-500 text-xs">{{ Math.round(gameStore.resources.faith.current).toLocaleString() }}/{{ Math.round(gameStore.resources.faith.max).toLocaleString() }}</span>
-          <span class="inline-block">Lvl {{ gameStore.resources.faith.level }}</span>
-        </p>
-      </div>
-      <ProgressBar :resource="gameStore.resources.faith" />
+        <div v-if="gameStore.resources.money.current > 0 || gameStore.resources.faith.level > 3" id="money" class="stat-section">
+          <span class="block text-base">${{ moneyDisplay }}</span>
+          <span v-if="gameStore.resources.money.perSecond > 0" class="text-xs text-gray-500">+${{ gameStore.resources.money.perSecond.toFixed(2) }}/follower</span>
+        </div>
+
+        <div  v-if="gameStore.resources.faith.current > 0 || gameStore.resources.faith.level > 1">
+          <div class="flex justify-evenly items-end mb-1">
+            <p class="text-left flex-1">Faith <span v-if="gameStore.resources.faith.perSecond > 0" class="text-xs text-gray-500">+{{ gameStore.resources.faith.perSecond.toFixed(2) }}/s</span></p>
+            <p class="text-right flex-1">
+              <span class="inline-block mr-4 text-gray-500 text-xs">{{ Math.round(gameStore.resources.faith.current).toLocaleString() }}/{{ Math.round(gameStore.resources.faith.max).toLocaleString() }}</span>
+              <span class="inline-block">Lvl {{ gameStore.resources.faith.level }}</span>
+            </p>
+          </div>
+          <ProgressBar :resource="gameStore.resources.faith" />
+        </div>
+      </TransitionGroup>
     </header>
 
     <section class="my-5 gap-3 flex flex-col">
-      <PlayerAction :gameObject="PLAYER_ACTIONS.PRAY" :action="() => gameStore.pray()" />
-      <!-- <PlayerAction :gameObject="PLAYER_ACTIONS.PREACH" :action="() => gameStore.preach()" /> -->
-      <PlayerAction :gameObject="PLAYER_ACTIONS.TITHE" :action="() => gameStore.tithe()" />
       <PlayerAction
-        v-for="building in BUILDINGS"
+        v-for="action in PLAYER_ACTIONS"
+        :key="action.name"
+        :gameObject="action"
+        :action="() => gameStore.doAction(action.name)"
+      />
+      <!-- <PlayerAction
+        v-for="building in buildingActions"
         :key="building.name"
         :gameObject="building"
         :action="() => gameStore.build(building)"
         :buildingCount="gameStore.buildings.filter(b => b.name === building.name).length"
-      />
+      /> -->
 
     </section>
 
@@ -68,7 +76,7 @@ import { onMounted, onUnmounted, onBeforeMount, computed } from 'vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import PlayerAction from '@/components/PlayerAction.vue';
 
-import { BUILDINGS, PLAYER_ACTIONS } from '@/constants/game';
+import { PLAYER_ACTIONS } from '@/constants/game';
 import { useGameStore } from '@/stores/gameStore';
 const gameStore = useGameStore()
 
@@ -102,6 +110,17 @@ onUnmounted(() => {
 const moneyDisplay = computed(() => {
   return gameStore.resources.money.current.toFixed(2).toLocaleString();
 })
+
+const actions = computed(() => {
+  return Object.values(PLAYER_ACTIONS)
+})
+
+// const buildingActions = computed(() => {
+//   return Object.values(PLAYER_ACTIONS).filter(b => b.isBuilding)
+// })
+// const playerActions = computed(() => {
+//   return Object.values(PLAYER_ACTIONS).filter(b => !b.isBuilding)
+// })
 </script>
 
 <style scoped>
