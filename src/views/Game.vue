@@ -78,7 +78,7 @@ import { useCheatCode } from '@/composables/cheatCode'
 import ProgressBar from '@/components/ProgressBar.vue';
 import PlayerAction from '@/components/PlayerAction.vue';
 
-import { PLAYER_ACTIONS } from '@/constants/game';
+import { PLAYER_ACTIONS } from '@/constants';
 import { useGameStore } from '@/stores/gameStore';
 const gameStore = useGameStore()
 
@@ -125,13 +125,6 @@ const moneyDisplay = computed(() => {
 const actions = computed(() => {
   return Object.values(PLAYER_ACTIONS)
 })
-
-// const buildingActions = computed(() => {
-//   return Object.values(PLAYER_ACTIONS).filter(b => b.isBuilding)
-// })
-// const playerActions = computed(() => {
-//   return Object.values(PLAYER_ACTIONS).filter(b => !b.isBuilding)
-// })
 </script>
 
 <style scoped>

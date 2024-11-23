@@ -6,7 +6,7 @@ import {
   SECONDS_PER_DAY,
   DAYS_PER_GAME,
   SCALE_FACTOR
-} from '@/constants/game';
+} from '@/constants';
 
 // attributes and resources
 class Resource {
