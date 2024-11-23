@@ -73,6 +73,8 @@
 
 <script setup>
 import { onMounted, onUnmounted, onBeforeMount, computed } from 'vue';
+import { useCheatCode } from '@/composables/cheatCode'
+
 import ProgressBar from '@/components/ProgressBar.vue';
 import PlayerAction from '@/components/PlayerAction.vue';
 
@@ -97,9 +99,18 @@ onBeforeMount(() => {
   gameStore.startGame()
 })
 
+// Cheat code logic
+const { isCheatActivated } = useCheatCode()
+
 onMounted(() => {
   // animationFrameId = requestAnimationFrame(onTick) // Start animation loop
   intervalId = setInterval(onTick, 1000)
+
+  window.addEventListener('cheatcode-activated', () => {
+    console.log('Cheat code activated!')
+    gameStore.setResourceCurrent(gameStore.resources.faith, gameStore.resources.faith.current + 1000)
+    gameStore.resources.money.current += 1000
+  })
 })
 
 onUnmounted(() => {

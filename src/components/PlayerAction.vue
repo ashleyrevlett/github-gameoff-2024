@@ -14,6 +14,7 @@
         (
           <span v-if="gameObject.currency === 'money'">${{ gameObject.cost }}</span>
           <span v-else-if="gameObject.cost > 0">{{ gameObject.cost }} {{ gameObject.currency }}</span>
+          <span v-else-if="gameObject.followerMultiplier == 1">/followers</span>
         )
       </div>
     </ActionButton>

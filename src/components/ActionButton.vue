@@ -42,7 +42,7 @@ const callAction = () => {
   actionButton.value.classList.add('active');
   setTimeout(() => {
     actionButton.value.classList.remove('active');
-  }, 200)
+  }, 100)
 
   if (props.cooldown > 0) {
     isOnCooldown.value = true;
