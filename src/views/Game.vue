@@ -53,7 +53,7 @@
   <main v-else-if="gameStore.isPaused" class="items-center justify-center">
     PAUSED
     <button @click="gameStore.unpauseTimer" class="btn mb-4 mt-2">Unpause</button>
-    <button @click="gameStore.startGame" class="btn">Restart</button>
+    <button @click="gameStore.startGame()" class="btn">Restart</button>
   </main>
   <main v-else>
     <section class="p-4 border border-black m-4 text-center">
@@ -80,7 +80,7 @@ import PlayerAction from '@/components/PlayerAction.vue';
 
 import { PLAYER_ACTIONS } from '@/constants';
 import { useGameStore } from '@/stores/gameStore';
-const gameStore = useGameStore()
+const gameStore = useGameStore();
 
 // let animationFrameId;
 let intervalId; // Changed from animationFrameId
@@ -96,7 +96,11 @@ function onTick() {
 }
 
 onBeforeMount(() => {
-  gameStore.startGame()
+  if (localStorage.getItem('gameStore')) {
+    gameStore.loadState()
+  } else {
+    gameStore.startGame()
+  }
 })
 
 // Cheat code logic
