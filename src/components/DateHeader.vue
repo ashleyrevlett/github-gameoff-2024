@@ -1,14 +1,16 @@
 <template>
-  <div class="date-header" ref="dateHeader">
-    <p class="font-bold">{{ gameStore.daysRemaining }} Days Left</p>
+  <div ref="dateHeader" class="date-header flex flex-row items-center justify-center gap-3">
+    <Clock :size="48" :percentage="percentDayComplete ? percentDayComplete : 0" />
+    <p class="font-bold text-center">{{ gameStore.daysRemaining }} Days Left</p>
   </div>
 </template>
 
 
 <script setup>
 import { computed, watch, ref } from 'vue';
+import { SECONDS_PER_DAY } from '@/constants';
 import { useGameStore } from '@/stores/gameStore';
-
+import Clock from '@/components/Clock.vue';
 const gameStore = useGameStore();
 
 const dateHeader = ref(null)
@@ -21,6 +23,11 @@ watch(daysRemaining, (newVal, oldVal) => {
       dateHeader.value.classList.remove('animate-pulse')
     }, 1000)
   }
+})
+
+const percentDayComplete = computed(() =>  {
+  const secondsRemainingInDay = gameStore.elapsedTime % SECONDS_PER_DAY;
+  return (SECONDS_PER_DAY - secondsRemainingInDay) / SECONDS_PER_DAY * 100;
 })
 </script>
 
