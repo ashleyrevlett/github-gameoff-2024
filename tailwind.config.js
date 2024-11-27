@@ -9,7 +9,9 @@ export default {
     'bg-red-500',
     'bg-purple-500',
     'router-link',
-    'router-link-active'
+    'router-link-active',
+    'invisible',
+    'visible',
   ],
   theme: {
     extend: {},

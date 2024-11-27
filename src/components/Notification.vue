@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="notification w-full flex items-center justify-center gap-3 @apply bg-yellow-200 p-4">
+    <div class="notification w-full flex items-center justify-center gap-3 p-2">
       <div>
         <span class="font-bold">{{ notification.title }}</span>: <span v-html="notification.message"></span>
       </div>
@@ -27,7 +27,7 @@ let timeoutId = null;
 onMounted(() => {
   timeoutId = setTimeout(() => {
     closeNotification();
-  }, 5000);
+  }, 3000);
 });
 
 onUnmounted(() => {

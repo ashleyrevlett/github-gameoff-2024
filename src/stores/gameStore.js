@@ -126,6 +126,9 @@ export const useGameStore = defineStore('gameStore', {
         const scale = SCALE_FACTOR
         const newMax = Math.ceil(scale * Math.log(x + 1) / Math.log(base) + 1)
         resource.max = Math.floor(resource.max * SCALE_FACTOR)
+
+        // reset current
+        resource.current = 0
       }
     },
 
