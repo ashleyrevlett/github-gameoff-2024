@@ -12,6 +12,9 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
+import { useGameStore } from '@/stores/gameStore';
+const gameStore = useGameStore();
+import { GAME_STATES } from '@/constants';
 
 const hasSaveGame = computed(() => {
   return localStorage.getItem('gameStore');
@@ -21,6 +24,8 @@ function newGame() {
   localStorage.removeItem('gameStore');
   router.push('/vision');
 }
+
+gameStore.gameState = GAME_STATES.PLAYING;
 </script>
 
 <style scoped>

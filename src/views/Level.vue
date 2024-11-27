@@ -70,7 +70,7 @@ import DateHeader from '@/components/DateHeader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 import PlayerAction from '@/components/PlayerAction.vue';
 
-import { PLAYER_ACTIONS } from '@/constants';
+import { PLAYER_ACTIONS, GAME_STATES } from '@/constants';
 import { useGameStore } from '@/stores/gameStore';
 const gameStore = useGameStore();
 
