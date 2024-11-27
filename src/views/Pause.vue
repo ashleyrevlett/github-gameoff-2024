@@ -9,12 +9,14 @@
 <script setup>
 import { useGameStore } from '@/stores/gameStore';
 const gameStore = useGameStore();
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 import { useNotificationStore } from '@/stores/notificationStore';
 const notificationStore = useNotificationStore();
 
 function restartGame() {
-  gameStore.startGame()
   notificationStore.clearNotifications()
+  localStorage.removeItem('gameStore');
+  router.push({ name: 'intro' });
 }
 </script>

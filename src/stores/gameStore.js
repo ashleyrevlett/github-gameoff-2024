@@ -120,10 +120,11 @@ export const useGameStore = defineStore('gameStore', {
         resource.level++
 
         // set new max for this level using log algorithm
-        const x = resource.level
-        const base = Math.E
-        const newMax = Math.ceil(SCALE_FACTOR * Math.log(x + 1) / Math.log(base) + 1)
-        resource.max = newMax
+        // const x = resource.level
+        // const base = Math.E
+        // const newMax = Math.ceil(SCALE_FACTOR * Math.log(x + 1) / Math.log(base) + 1)
+        // resource.max = newMax
+        resource.max = Math.floor(resource.max * SCALE_FACTOR)
 
         // reset current
         resource.current = 0
