@@ -2,11 +2,19 @@
   <main class="flex flex-col h-screen items-center justify-center">
     PAUSED
     <button @click="gameStore.unpauseTimer()" class="btn mb-6 mt-4">Unpause</button>
-    <button @click="gameStore.startGame()" class="btn">Restart</button>
+    <button @click="restartGame()" class="btn">Restart</button>
   </main>
 </template>
 
 <script setup>
 import { useGameStore } from '@/stores/gameStore';
 const gameStore = useGameStore();
+
+import { useNotificationStore } from '@/stores/notificationStore';
+const notificationStore = useNotificationStore();
+
+function restartGame() {
+  gameStore.startGame()
+  notificationStore.clearNotifications()
+}
 </script>
