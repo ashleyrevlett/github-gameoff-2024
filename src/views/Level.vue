@@ -49,12 +49,14 @@
       </section>
 
       <section id="actions" class="my-5 gap-3 flex flex-col">
-        <PlayerAction
-          v-for="action in PLAYER_ACTIONS"
-          :key="action.name"
-          :gameObject="action"
-          :action="() => gameStore.doAction(action.name)"
-        />
+        <TransitionGroup name="fade-slide">
+          <PlayerAction
+            v-for="action in PLAYER_ACTIONS"
+            :key="action.name"
+            :gameObject="action"
+            :action="() => gameStore.doAction(action.name)"
+          />
+        </TransitionGroup>
       </section>
     </div>
     <Notifications />
