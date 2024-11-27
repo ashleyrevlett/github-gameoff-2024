@@ -46,7 +46,7 @@ watch(() => gameStore.resources[props.resource.resourceType].level, () => {
 
 <style scoped>
 .progress-bar {
-  --level-up-color: rgba(0, 255, 0, 1);
+  --level-up-color: red;
   /* transition: background-color .5s; */
   @apply flex-grow w-full h-3 border border-black rounded-full overflow-hidden;
 

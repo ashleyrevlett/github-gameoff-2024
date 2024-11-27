@@ -5,7 +5,7 @@
   >
     <ActionButton
       :action="action"
-      :actionLabel="`${gameObject.name}`"
+      :actionLabel="`${gameObject.icon} ${gameObject.name}`"
       :cooldown="gameObject.cooldown"
       :disabled="gameObject.currency ? gameStore.resources[gameObject.currency].current < gameObject.cost : false"
       @click="animateGhostIcon"

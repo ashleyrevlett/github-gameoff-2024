@@ -122,11 +122,11 @@ const onLevelUp = (newLevel, oldLevel) => {
   setTimeout(() => {
     notifyLevelUp.value = false
   }, 1000)
-  notificationStore.addNotification({
-    id: Date.now(),
-    title: `Faith Level ${newLevel}`,
-    message: 'New actions now available.'
-  })
+  // notificationStore.addNotification({
+  //   id: Date.now(),
+  //   title: `Faith Level ${newLevel}`,
+  //   message: 'New actions now available.'
+  // })
 }
 useLevelNotification(onLevelUp)
 

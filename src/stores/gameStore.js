@@ -30,7 +30,6 @@ export const useGameStore = defineStore('gameStore', {
 
   actions: {
     saveState() {
-      console.log('saveState!');
       const state = {
         ...this.$state,
         resources: Resource.serializeAll(this.resources)
@@ -123,9 +122,8 @@ export const useGameStore = defineStore('gameStore', {
         // set new max for this level using log algorithm
         const x = resource.level
         const base = Math.E
-        const scale = SCALE_FACTOR
-        const newMax = Math.ceil(scale * Math.log(x + 1) / Math.log(base) + 1)
-        resource.max = Math.floor(resource.max * SCALE_FACTOR)
+        const newMax = Math.ceil(SCALE_FACTOR * Math.log(x + 1) / Math.log(base) + 1)
+        resource.max = newMax
 
         // reset current
         resource.current = 0

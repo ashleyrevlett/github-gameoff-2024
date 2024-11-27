@@ -66,10 +66,9 @@ const callAction = () => {
   overflow: hidden;
 
   &:disabled {
-    opacity: 1;
-    background-color: #ccc;
+    opacity: .4;
     color: #666;
-    border-color: #ccc;
+    border-color: #666;
   }
 }
 

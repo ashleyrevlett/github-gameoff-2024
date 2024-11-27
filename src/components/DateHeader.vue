@@ -42,26 +42,18 @@ const percentDayComplete = computed(() =>  {
 }
 
 .animate-pulse {
-  animation: pulse 1s ease-out infinite;
-  background: red;
-  color: white;
+  animation: pulse .5s ease-out infinite;
 }
 
 @keyframes pulse {
   0% {
     transform: scale(1);
-    /* background: black;
-    color: white; */
   }
   50% {
-    transform: scale(1.03);
-    /* background: white;
-    color: black; */
+    transform: scale(1.08);
   }
   100% {
     transform: scale(1);
-    /* background: black;
-    color: white; */
   }
 }
 </style>
